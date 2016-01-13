@@ -1,7 +1,8 @@
 import {Component} from 'angular2/core';
-import {RouteConfig, ROUTER_DIRECTIVES} from 'angular2/router';
+import {Router, RouteConfig, ROUTER_DIRECTIVES} from 'angular2/router';
 import {Contact, ContactGroup} from './contact';
 import {MessageListComponent} from './message-list.component';
+import {ContactListComponent} from './contact-list.component';
 
 var CONTACT_GROUPS: ContactGroup[] = [
     {"id": 1, "name": "Organizers", "contacts": [
@@ -22,23 +23,39 @@ var CONTACT_GROUPS: ContactGroup[] = [
 @Component({
     selector: 'dispatch-app',
     template:`
-        <h1>{{title}}</h1>
-        <message-list [contactGroups]="contactGroups">
-        </message-list>
-        
-        <a [routerLink]="['/Messages']">Messages</a>
-        
+        <ul class="nav nav-tabs">
+            <li role="presentation" [class.active]="isRouteActive('messages')"><a [routerLink]="['/Messages']">Messages</a></li>
+            <li role="presentation" [class.active]="isRouteActive('contacts')"><a [routerLink]="['/Contacts']">Contacts</a></li>
+        </ul>
         <router-outlet></router-outlet>
     `,
-    directives: [MessageListComponent, ROUTER_DIRECTIVES]
+    directives: [MessageListComponent, ContactListComponent, ROUTER_DIRECTIVES]
 })
 @RouteConfig([
     { path: "/messages", 
       name: "Messages", 
       component: MessageListComponent, 
-      useAsDefault: true }
+      useAsDefault: true },
+    { path: "/contacts", 
+      name: "Contacts", 
+      component: ContactListComponent }
 ])
 export class AppComponent {
     public title = 'SMS Dispatch';
     public contactGroups = CONTACT_GROUPS;
+    public currentRoute: string;
+    constructor(router: Router) {
+        var component: AppComponent = this;
+        router.subscribe( function(route: string) {
+          component.currentRoute = route;  
+        });
+    }
+    
+    onRouteChanged(path: string) {
+        this.currentRoute = path;
+    }
+    
+    isRouteActive(route: string): boolean {
+        return route === this.currentRoute;
+    }
 }
