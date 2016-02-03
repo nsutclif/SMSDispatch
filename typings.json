@@ -1,0 +1,7 @@
+{
+  "dependencies": {},
+  "devDependencies": {},
+  "ambientDependencies": {
+    "aws-sdk": "github:DefinitelyTyped/DefinitelyTyped/aws-sdk/aws-sdk.d.ts#6c891d4cdd21b9255df21edfb7566945e4b44f05"
+  }
+}

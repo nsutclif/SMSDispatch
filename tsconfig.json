@@ -7,7 +7,9 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "removeComments": false,
-    "noImplicitAny": false
+    "noImplicitAny": false,
+    "rootDir": "source",
+    "outDir": "app"
   },
   "exclude": [
     "node_modules"
