@@ -1,6 +1,7 @@
-import {Component} from 'angular2/core';
+import {Component, OnInit} from 'angular2/core';
 import {SMSMessage} from './sms-message';
 import {Contact, ContactGroup} from './contact'; 
+import {ContactsService} from './contacts.service';
 
 @Component({
     selector: 'sms-message',
@@ -29,11 +30,22 @@ import {Contact, ContactGroup} from './contact';
             </span>        
         </span>
     `,
-    inputs: ['message', 'selected', 'contactGroups']
+    inputs: ['message', 'selected']
 })
-export class SMSMessageComponent {
+export class SMSMessageComponent implements OnInit {
     public message: SMSMessage;
     public selected: boolean;
     // TODO: Does Contact Groups make sense as some sort of central service?
     public contactGroups: ContactGroup[];
+    
+    constructor(private _contactsService: ContactsService) {        
+    }
+    
+    ngOnInit() {
+        this.getContacts();
+    }
+    
+    getContacts() {
+        this._contactsService.getContactGroups().then(contactGroups => this.contactGroups = contactGroups);
+    }
 }
