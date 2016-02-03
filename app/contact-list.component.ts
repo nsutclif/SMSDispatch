@@ -7,7 +7,7 @@ var CONTACT_GROUPS: ContactGroup[] = [
         {"id": 2, "name": "Mary", "phone": "555-555-1112"}
         ]},
     {"id": 1, "name": "Volunteers", "contacts": [
-        {"id": 3, "name": "Bary", "phone": "555-555-1113"},
+        {"id": 3, "name": "Barry", "phone": "555-555-1113"},
         {"id": 4, "name": "Perry", "phone": "555-555-1114"},
         {"id": 5, "name": "Carry", "phone": "555-555-1115"},
         {"id": 6, "name": "Fairy", "phone": "555-555-1116"},

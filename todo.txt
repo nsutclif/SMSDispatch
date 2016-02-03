@@ -1,0 +1,15 @@
+Build out more UI.  Try to mock out data services
+
+Authentication from  Angular -> AWS
+
+
+
+Authenticating into Dynamo
+
+Authenticating into Twilio
+
+Data binding to live data
+
+Multi tenancy
+
+forward popup: display organizers group, individual organizers, volunteers group, but NOT individual volunteers.  Confirmation dialog to broadcast to a group?
