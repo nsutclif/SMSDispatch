@@ -1,11 +1,7 @@
-import {Component} from 'angular2/core';
+import {Component, OnInit} from 'angular2/core';
 import {SMSMessage} from './sms-message';
 import {SMSMessageComponent} from './sms-message.component';
-
-var MESSAGES: SMSMessage[] = [
-    { "id": 1, "text": "Sample Message 1", "date": new Date(), "senderID": 1, "recipientID": 0 },
-    { "id": 2, "text": "Sample Message 2", "date": new Date(), "senderID": 2, "recipientID": 0 }
-]
+import {MessagesService} from './messages.service';
 
 
 @Component({
@@ -25,11 +21,22 @@ var MESSAGES: SMSMessage[] = [
     `,
     directives: [SMSMessageComponent]
 })
-export class MessageListComponent {
-    public messages = MESSAGES;
+export class MessageListComponent implements OnInit {
+    public messages: SMSMessage[];
     public selectedMessage: SMSMessage;
     
     onSelect(message: SMSMessage) {
         this.selectedMessage = message;
+    }
+    
+    constructor(private _messagesService: MessagesService) {        
+    }
+    
+    ngOnInit() {
+        this.getContacts();
+    }
+    
+    getContacts() {
+        this._messagesService.getMessages().then(messages => this.messages = messages);
     }
 }

@@ -4,6 +4,7 @@ import {Contact, ContactGroup} from './contact';
 import {MessageListComponent} from './message-list.component';
 import {ContactListComponent} from './contact-list.component';
 import {ContactsService} from './contacts.service';
+import {MessagesService} from './messages.service';
 
 @Component({
     selector: 'dispatch-app',
@@ -15,7 +16,7 @@ import {ContactsService} from './contacts.service';
         <router-outlet></router-outlet>
     `,
     directives: [MessageListComponent, ContactListComponent, ROUTER_DIRECTIVES],
-    providers: [ContactsService]
+    providers: [ContactsService, MessagesService]
 })
 @RouteConfig([
     { path: "/messages", 
