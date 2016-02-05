@@ -1,5 +1,5 @@
 import {Component, OnInit} from 'angular2/core';
-import {SMSMessage} from './sms-message';
+import {SMSMessage} from './message';
 import {Contact, ContactGroup} from './contact'; 
 import {ContactsService} from './contacts.service';
 

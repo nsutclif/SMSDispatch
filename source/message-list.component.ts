@@ -1,6 +1,6 @@
 import {Component, OnInit} from 'angular2/core';
-import {SMSMessage} from './sms-message';
-import {SMSMessageComponent} from './sms-message.component';
+import {SMSMessage} from './message';
+import {SMSMessageComponent} from './message.component';
 import {MessagesService} from './messages.service';
 
 

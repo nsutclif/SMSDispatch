@@ -1,5 +1,5 @@
 import {Injectable} from 'angular2/core';
-import {SMSMessage} from './sms-message';
+import {SMSMessage} from './message';
 
 var MESSAGES: SMSMessage[] = [
     { "id": 1, "text": "Sample Message 1", "date": new Date(), "senderID": 1, "recipientID": 0 },

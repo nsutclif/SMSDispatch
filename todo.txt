@@ -2,6 +2,8 @@ Build out more UI.  Try to mock out data services
 
 Authentication from  Angular -> AWS
 
+Prevent XSS for user-entered data
+
 
 
 Authenticating into Dynamo
