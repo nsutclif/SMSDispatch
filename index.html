@@ -6,17 +6,20 @@
     <title>SMS Dispatch</title>
 
     <!-- 1. Load libraries -->
+    <script src="node_modules/es6-shim/es6-shim.min.js"></script>
+    <script src="node_modules/systemjs/dist/system-polyfills.js"></script>
+
     <script src="node_modules/angular2/bundles/angular2-polyfills.js"></script>
     <script src="node_modules/systemjs/dist/system.src.js"></script>
     <script src="node_modules/rxjs/bundles/Rx.js"></script>
     <script src="node_modules/angular2/bundles/angular2.dev.js"></script>
+    
     <script src="node_modules/angular2/bundles/router.dev.js"></script>
-
     <script src="node_modules/jquery/dist/jquery.js"></script><!--Required by Bootstrap-->
     <script src="node_modules/bootstrap/dist/js/bootstrap.js"></script>
     <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.css">
     
-    <script src="node_modules/aws-sdk/dist/aws-sdk.min.js"></script>
+    <script src="node_modules/aws-sdk/dist/aws-sdk.js"></script>
 
     <!-- 2. Configure SystemJS -->
     <script>
@@ -88,6 +91,45 @@
                             console.log(JSON.stringify(data));
                         }
                     });
+                    
+                    var listRecordParams = {
+                        DatasetName: 'TestDataset',
+                        IdentityId: AWS.config.credentials.identityId,
+                        IdentityPoolId: "us-east-1:66b8e8b8-c6a3-4d80-9d9c-e939c814f0b7"
+                    }
+                    
+                    cognitoSyncClient.listRecords(listRecordParams, function(err, data) {
+                        if (err) console.log(err, err.stack); // an error occurred
+                        else {
+                            console.log(data);           // successful response
+                            
+                            
+                            //TODO: Move this code into contacts.service.  Can we use data.Records directly as the model for Angular?
+                            
+                            console.log(JSON.stringify(data.Records));
+                            /*
+                            var updateRecordParams = {                     
+                                DatasetName: 'TestDataset',
+                                IdentityId: AWS.config.credentials.identityId,
+                                IdentityPoolId: "us-east-1:66b8e8b8-c6a3-4d80-9d9c-e939c814f0b7",
+                                SyncSessionToken: data.SyncSessionToken,
+                                RecordPatches: [
+                                    {
+                                        Key: 'TestValue',
+                                        Op: 'replace',
+                                        SyncCount: 0
+                                    }
+                                ]
+                            }
+                            cognitoSyncClient.updateRecords(updateRecordParams, function(err, data) {
+                                if (err) console.log(err, err.stack); // an error occurred
+                                else     console.log(data);           // successful response
+                            });
+                            */
+                            
+                        }     
+                    });
+                    
                 });
 
                 

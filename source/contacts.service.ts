@@ -1,5 +1,14 @@
+///<reference path="../typings/browser/ambient/aws-sdk/aws-sdk.d.ts"/>
 import {Injectable} from 'angular2/core';
 import {Contact, ContactGroup} from './contact';
+
+// NOTE: I'm pretty sure this is totally not the right way to do this.
+// I thought I was supposed to do this:
+// import AWS = require('aws-sdk');
+// ...but if I import AWS in that way and actually use it, I get an error.
+// The error is the same as if I misspell aws-sdk.
+// https://blog.nraboy.com/2016/01/include-external-javascript-libraries-in-an-angular-2-typescript-project/
+declare var AWS: any;
 
 const CONTACT_GROUPS: ContactGroup[] = [
     {"id": 1, "name": "Organizers", "contacts": [

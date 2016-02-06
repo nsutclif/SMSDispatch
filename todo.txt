@@ -3,8 +3,11 @@ Build out more UI.  Try to mock out data services
 Authentication from  Angular -> AWS
 
 Prevent XSS for user-entered data
+http://martinfowler.com/articles/web-security-basics.html
 
-
+Investigate Auth Zero
+https://github.com/auth0/auth0-s3-sample
+https://auth0.com/authenticate/angular2/aws-addon
 
 Authenticating into Dynamo
 
