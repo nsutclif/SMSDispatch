@@ -28,7 +28,58 @@ const CONTACT_GROUPS: ContactGroup[] = [
 
 @Injectable()
 export class ContactsService {
-    getContactGroups() {
+    private syncClient: any;
+    
+    private getSyncClient(): Promise<any> {
+        return new Promise<any>(function(resolve, reject) {
+            if (this.syncClient) {
+                resolve(this.syncClient);
+            }
+            else {
+                
+                // LEFT OFF HERE.  AWS.config.credentials is still null here.
+
+                if (!AWS.config.credentials) {
+                    reject(new Error('Not logged into AWS.'));
+                }
+                else {                
+                    AWS.config.credentials.get(function() {
+                        this.syncClient = new AWS.CognitoSyncManager();
+                        resolve(this.syncClient); 
+                    });
+                }
+            }
+        });
+    }
+        
+    private openOrCreateDataset(datasetName: string): Promise<any> {
+        return this.getSyncClient().then(function(syncClient: any) {
+            return new Promise<any>(function(resolve,reject) {
+                syncClient.openOrCreateDataset(datasetName, function(err, dataset: any) {
+                    if(err) {
+                        reject(err);
+                    }
+                    resolve(dataset);
+                });
+            });
+        });
+    }
+    
+    getContactGroups(): Promise<ContactGroup[]> {
+        this.openOrCreateDataset('TestDataset').then(function(dataset:any) {
+            console.log('promised dataset: ' + dataset);
+            
+            // TODO: shouldn't there be records in here?  Maybe need to synchronize?
+            
+            return new Promise<any>(function(resolve,reject) {
+                dataset.getAllRecords(function(error,records) {
+                    console.log('records: ' + records);
+                });
+            })
+        }).catch(function(reason) {
+            console.log('rejected: ' + reason);
+        });
+        
         return Promise.resolve(CONTACT_GROUPS);
     }
 }

@@ -2,6 +2,11 @@ Build out more UI.  Try to mock out data services
 
 Authentication from  Angular -> AWS
 
+Cognito: use low-level SDK
+http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/CognitoSync.html
+...or higher level sync client?
+https://github.com/aws/amazon-cognito-js
+
 Prevent XSS for user-entered data
 http://martinfowler.com/articles/web-security-basics.html
 
