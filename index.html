@@ -48,21 +48,6 @@
             version    : 'v2.5'
             });
             FB.login(function (response) {
-                /*bucket.config.credentials = new AWS.WebIdentityCredentials({
-                    ProviderId: 'graph.facebook.com',
-                    RoleArn: roleArn,
-                    WebIdentityToken: response.authResponse.accessToken
-                });*/
-                // Initialize the Amazon Cognito credentials provider
-                /*
-                (Java?) Snippet provided during AWS setup:
-                var CognitoCachingCredentialsProvider credentialsProvider = new CognitoCachingCredentialsProvider(
-                    getApplicationContext(),
-                    "us-east-1:66b8e8b8-c6a3-4d80-9d9c-e939c814f0b7", // Identity Pool ID
-                    Regions.US_EAST_1 // Region
-                );
-                */
-                
                 // http://docs.aws.amazon.com/AWSJavaScriptSDK/guide/browser-configuring.html
                 AWS.config.credentials = new AWS.CognitoIdentityCredentials({
                     IdentityPoolId: "us-east-1:66b8e8b8-c6a3-4d80-9d9c-e939c814f0b7",
@@ -73,66 +58,6 @@
                 
                 // Cognito isn't available in all regions so we're stuck with us-east-1
                 AWS.config.region = 'us-east-1';
-
-                AWS.config.credentials.get(function(err) {
-                    if (err) {
-                        console.log("Error: "+err);
-                        return;
-                    }
-                    console.log("Cognito Identity Id: " + AWS.config.credentials.identityId);
-                
-                    // Other service clients will automatically use the Cognito Credentials provider
-                    // configured in the JavaScript SDK.
-                    var cognitoSyncClient = new AWS.CognitoSync();
-                    cognitoSyncClient.listDatasets({
-                        IdentityId: AWS.config.credentials.identityId,
-                        IdentityPoolId: "us-east-1:66b8e8b8-c6a3-4d80-9d9c-e939c814f0b7"
-                    }, function(err, data) {
-                        if ( !err ) {
-                            console.log(JSON.stringify(data));
-                        }
-                    });
-                    
-                    var listRecordParams = {
-                        DatasetName: 'TestDataset',
-                        IdentityId: AWS.config.credentials.identityId,
-                        IdentityPoolId: "us-east-1:66b8e8b8-c6a3-4d80-9d9c-e939c814f0b7"
-                    }
-                    
-                    cognitoSyncClient.listRecords(listRecordParams, function(err, data) {
-                        if (err) console.log(err, err.stack); // an error occurred
-                        else {
-                            console.log(data);           // successful response
-                            
-                            
-                            //TODO: Move this code into contacts.service.  Can we use data.Records directly as the model for Angular?
-                            
-                            console.log(JSON.stringify(data.Records));
-                            /*
-                            var updateRecordParams = {                     
-                                DatasetName: 'TestDataset',
-                                IdentityId: AWS.config.credentials.identityId,
-                                IdentityPoolId: "us-east-1:66b8e8b8-c6a3-4d80-9d9c-e939c814f0b7",
-                                SyncSessionToken: data.SyncSessionToken,
-                                RecordPatches: [
-                                    {
-                                        Key: 'TestValue',
-                                        Op: 'replace',
-                                        SyncCount: 0
-                                    }
-                                ]
-                            }
-                            cognitoSyncClient.updateRecords(updateRecordParams, function(err, data) {
-                                if (err) console.log(err, err.stack); // an error occurred
-                                else     console.log(data);           // successful response
-                            });
-                            */
-                            
-                        }     
-                    });
-                    
-                });
-
                 
                 fbUserId = response.authResponse.userID;
                 // button.style.display = 'block';
