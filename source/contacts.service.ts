@@ -65,15 +65,41 @@ export class ContactsService {
         });
     }
     
+    private syncDataset(dataset: any): Promise<void> {        
+        return new Promise<void>(function(resolve,reject) {
+            dataset.synchronize(
+                {
+                    onSuccess: function(dataset, updates){
+                        console.log('synchronized.'); 
+                        resolve();
+                    },
+                    onFailure: function(err) {
+                        reject(err);
+                    }
+                    // TODO: Write an onConflict handler.
+                }, 
+                false);
+        });
+    }
+    
     getContactGroups(): Promise<ContactGroup[]> {
+        let contactsDataset: any;
+        let self = this;
+        
         this.openOrCreateDataset('TestDataset').then(function(dataset:any) {
+            contactsDataset = dataset;
             console.log('promised dataset: ' + dataset);
-            
-            // TODO: shouldn't there be records in here?  Maybe need to synchronize?
-            
-            return new Promise<any>(function(resolve,reject) {
-                dataset.getAllRecords(function(error,records) {
-                    console.log('records: ' + records);
+            return self.syncDataset(contactsDataset);
+        }).then(function() {
+            return new Promise<void>(function(resolve,reject) {
+                contactsDataset.getAllRecords(function(error,records) {
+                    if(error) {
+                        reject(error);
+                    }
+                    else {
+                        console.log('records: ' + records);
+                        resolve();
+                    }
                 });
             })
         }).catch(function(reason) {
