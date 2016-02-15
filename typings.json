@@ -2,6 +2,7 @@
   "dependencies": {},
   "devDependencies": {},
   "ambientDependencies": {
+    "es6-shim": "github:DefinitelyTyped/DefinitelyTyped/es6-shim/es6-shim.d.ts#6697d6f7dadbf5773cb40ecda35a76027e0783b2",
     "aws-sdk": "github:DefinitelyTyped/DefinitelyTyped/aws-sdk/aws-sdk.d.ts#6c891d4cdd21b9255df21edfb7566945e4b44f05"
   }
 }

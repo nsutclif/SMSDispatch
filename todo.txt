@@ -23,3 +23,14 @@ Data binding to live data
 Multi tenancy
 
 forward popup: display organizers group, individual organizers, volunteers group, but NOT individual volunteers.  Confirmation dialog to broadcast to a group?
+
+
+Promises
+
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise
+https://promisesaplus.com/
+http://stackoverflow.com/questions/22519784/how-do-i-convert-an-existing-callback-api-to-promises
+
+
+Angular 2
+http://thejackalofjavascript.com/developing-a-mean-app-with-angular-2-0/

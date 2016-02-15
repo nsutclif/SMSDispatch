@@ -28,6 +28,7 @@ const CONTACT_GROUPS: ContactGroup[] = [
 
 @Injectable()
 export class ContactsService {
+    // TODO: Define some types for this thing:    
     private syncClient: any;
     
     private getSyncClient(): Promise<any> {
