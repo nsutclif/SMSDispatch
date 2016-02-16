@@ -31,10 +31,10 @@ export class ContactsService {
     // TODO: Define some types for this thing:    
     private syncClient: any;
     
-    private getSyncClient(): Promise<any> {
-        return new Promise<any>(function(resolve, reject) {
-            if (this.syncClient) {
-                resolve(this.syncClient);
+    private getSyncClient(service: ContactsService): Promise<any> {
+        return new Promise<any>((resolve, reject) => {
+            if (service.syncClient) {
+                resolve(service.syncClient);
             }
             else {
                 
@@ -44,9 +44,9 @@ export class ContactsService {
                     reject(new Error('Not logged into AWS.'));
                 }
                 else {                
-                    AWS.config.credentials.get(function() {
-                        this.syncClient = new AWS.CognitoSyncManager();
-                        resolve(this.syncClient); 
+                    AWS.config.credentials.get(() => {
+                        service.syncClient = new AWS.CognitoSyncManager();
+                        resolve(service.syncClient); 
                     });
                 }
             }
@@ -54,9 +54,9 @@ export class ContactsService {
     }
         
     private openOrCreateDataset(datasetName: string): Promise<any> {
-        return this.getSyncClient().then(function(syncClient: any) {
-            return new Promise<any>(function(resolve,reject) {
-                syncClient.openOrCreateDataset(datasetName, function(err, dataset: any) {
+        return this.getSyncClient(this).then((syncClient: any) => {
+            return new Promise<any>((resolve,reject) => {
+                syncClient.openOrCreateDataset(datasetName, (err, dataset: any) => {
                     if(err) {
                         reject(err);
                     }
@@ -67,14 +67,14 @@ export class ContactsService {
     }
     
     private syncDataset(dataset: any): Promise<void> {        
-        return new Promise<void>(function(resolve,reject) {
+        return new Promise<void>((resolve,reject) => {
             dataset.synchronize(
                 {
-                    onSuccess: function(dataset, updates){
+                    onSuccess: (dataset, updates) => {
                         console.log('synchronized.'); 
                         resolve();
                     },
-                    onFailure: function(err) {
+                    onFailure: (err) => {
                         reject(err);
                     }
                     // TODO: Write an onConflict handler.
@@ -87,13 +87,13 @@ export class ContactsService {
         let contactsDataset: any;
         let self = this;
         
-        this.openOrCreateDataset('TestDataset').then(function(dataset:any) {
+        this.openOrCreateDataset('TestDataset').then((dataset:any) => {
             contactsDataset = dataset;
             console.log('promised dataset: ' + dataset);
             return self.syncDataset(contactsDataset);
-        }).then(function() {
-            return new Promise<void>(function(resolve,reject) {
-                contactsDataset.getAllRecords(function(error,records) {
+        }).then(() => {
+            return new Promise<void>((resolve,reject) => {
+                contactsDataset.getAllRecords((error,records) => {
                     if(error) {
                         reject(error);
                     }
@@ -103,7 +103,7 @@ export class ContactsService {
                     }
                 });
             })
-        }).catch(function(reason) {
+        }).catch((reason) => {
             console.log('rejected: ' + reason);
         });
         
