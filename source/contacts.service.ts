@@ -60,7 +60,9 @@ export class ContactsService {
                     if(err) {
                         reject(err);
                     }
-                    resolve(dataset);
+                    else {
+                        resolve(dataset);
+                    }
                 });
             });
         });

@@ -18,13 +18,13 @@
     "rxjs": "5.0.0-beta.0",
     "zone.js": "0.5.14",
     "bootstrap": "3.3.6",
-    "jquery": "^2.2.0",
-    "aws-sdk": "~2.2.33"
+    "jquery": "2.2.0",
+    "aws-sdk": "2.2.36"
   },
   "devDependencies": {
-    "concurrently": "^1.0.0",
-    "lite-server": "^2.0.1",
-    "typescript": " ^1.7.5",
-    "typings": "~0.6.6"
+    "concurrently": "1.0.0",
+    "lite-server": "2.0.1",
+    "typescript": "1.7.5",
+    "typings": "0.6.8"
   }
 }
