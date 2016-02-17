@@ -1,6 +1,6 @@
 import {Component, OnInit} from 'angular2/core';
 import {SMSMessage} from './message';
-import {Contact, ContactGroup} from './contact'; 
+import {Contact} from './contact'; 
 import {ContactsService} from './contacts.service';
 
 @Component({
@@ -35,8 +35,7 @@ import {ContactsService} from './contacts.service';
 export class SMSMessageComponent implements OnInit {
     public message: SMSMessage;
     public selected: boolean;
-    // TODO: Does Contact Groups make sense as some sort of central service?
-    public contactGroups: ContactGroup[];
+    public contacts: Contact[];
     
     constructor(private _contactsService: ContactsService) {        
     }
@@ -46,6 +45,6 @@ export class SMSMessageComponent implements OnInit {
     }
     
     getContacts() {
-        this._contactsService.getContactGroups().then(contactGroups => this.contactGroups = contactGroups);
+        this._contactsService.getContacts().then(contacts => this.contacts = contacts);
     }
 }

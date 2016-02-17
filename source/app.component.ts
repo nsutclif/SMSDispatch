@@ -1,6 +1,6 @@
 import {Component} from 'angular2/core';
 import {Router, RouteConfig, ROUTER_DIRECTIVES} from 'angular2/router';
-import {Contact, ContactGroup} from './contact';
+import {Contact} from './contact';
 import {MessageListComponent} from './message-list.component';
 import {ContactListComponent} from './contact-list.component';
 import {ContactsService} from './contacts.service';

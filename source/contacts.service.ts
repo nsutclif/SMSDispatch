@@ -1,6 +1,6 @@
 ///<reference path="../typings/browser/ambient/aws-sdk/aws-sdk.d.ts"/>
 import {Injectable} from 'angular2/core';
-import {Contact, ContactGroup} from './contact';
+import {Contact} from './contact';
 
 // NOTE: I'm pretty sure this is totally not the right way to do this.
 // I thought I was supposed to do this:
@@ -10,6 +10,7 @@ import {Contact, ContactGroup} from './contact';
 // https://blog.nraboy.com/2016/01/include-external-javascript-libraries-in-an-angular-2-typescript-project/
 declare var AWS: any;
 
+/*
 const CONTACT_GROUPS: ContactGroup[] = [
     {"id": 1, "name": "Organizers", "contacts": [
         {"id": 1, "name": "Terry", "phone": "555-555-1111"},
@@ -24,7 +25,7 @@ const CONTACT_GROUPS: ContactGroup[] = [
         {"id": 8, "name": "Sherry", "phone": "555-555-1118"},
         {"id": 9, "name": "Lary", "phone": "555-555-1119"}
         ]}
-] 
+] */
 
 @Injectable()
 export class ContactsService {
@@ -85,30 +86,43 @@ export class ContactsService {
         });
     }
     
-    getContactGroups(): Promise<ContactGroup[]> {
-        let contactsDataset: any;
+    private contacts: Contact[];
+    
+    getContacts(): Promise<Contact[]> {
         let self = this;
+
+        // If there is a second call to getContactGroups() while the first call is still underway, I think we'll go
+        // to the server twice. 
+        // TODO: Improve.
         
-        this.openOrCreateDataset('TestDataset').then((dataset:any) => {
-            contactsDataset = dataset;
-            console.log('promised dataset: ' + dataset);
-            return self.syncDataset(contactsDataset);
-        }).then(() => {
-            return new Promise<void>((resolve,reject) => {
-                contactsDataset.getAllRecords((error,records) => {
-                    if(error) {
-                        reject(error);
-                    }
-                    else {
-                        console.log('records: ' + records);
-                        resolve();
-                    }
-                });
+        if(self.contacts) {
+            return Promise.resolve(self.contacts);
+        }
+        else {
+            let contactsDataset: any;
+            
+            return new Promise<Contact[]>((resolve,reject) => {
+                self.openOrCreateDataset('Contacts').then((dataset:any) => {
+                    contactsDataset = dataset;
+                    console.log('promised dataset: ' + dataset);
+                    return self.syncDataset(contactsDataset);
+                }).then(() => {
+                    contactsDataset.getAllRecords((error,records) => {
+                        if(error) {
+                            reject(error);
+                        }
+                        else {
+                            console.log('records: ' + records);
+                            //records[0].name = 'asdf';
+                            //resolve(CONTACT_GROUPS);
+                            self.contacts = records;
+                            resolve(records);
+                        }
+                    })
+                })
             })
-        }).catch((reason) => {
-            console.log('rejected: ' + reason);
-        });
+        }
         
-        return Promise.resolve(CONTACT_GROUPS);
+        //return Promise.resolve(CONTACT_GROUPS);
     }
 }

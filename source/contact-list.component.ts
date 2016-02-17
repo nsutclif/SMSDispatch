@@ -1,23 +1,28 @@
 import {Component, OnInit} from 'angular2/core';
-import {ContactGroup} from './contact';
+import {Contact} from './contact';
 import {ContactsService} from './contacts.service';
 
 @Component({
     selector: 'contact-list',
     template:`
-        <template ngFor #contactGroup [ngForOf]="contactGroups" #groupIndex="index">
-            <h3>{{contactGroup.name}}</h3>
-            <ul class="list-group">
-                <li *ngFor="#contact of contactGroup.contacts"
-                    class="list-group-item">
-                    {{contact.name}}
-                </li>
-            </ul>
-        </template>
+        <table class="table">
+          <tr>
+            <th>Group</th>
+            <th>Name</th>
+            <th>Phone</th>
+            <th>Leader</th>
+          </tr>
+          <tr *ngFor="#contact of contacts">
+            <td>{{contact.group}}</td>
+            <td>{{contact.name}}</td>
+            <td>{{contact.phone}}</td>
+            <td>{{contact.leader}}</td>
+          </tr>
+        </table>
     `,
 })
 export class ContactListComponent implements OnInit {
-    public contactGroups: ContactGroup[];
+    public contacts: Contact[];
     
     constructor(private _contactsService: ContactsService) {        
     }
@@ -27,7 +32,10 @@ export class ContactListComponent implements OnInit {
     }
     
     getContacts() {
-        this._contactsService.getContactGroups().then(contactGroups => this.contactGroups = contactGroups);
+        this._contactsService.getContacts().then(contacts => {
+            this.contacts = contacts;
+            console.log(JSON.stringify(contacts));
+        });
     }
     
     // onSelect(message: SMSMessage) {
