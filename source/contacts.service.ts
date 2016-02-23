@@ -87,8 +87,9 @@ export class ContactsService {
     }
     
     private contacts: Contact[];
+    private contactsDataset: any;
     
-    getContacts(): Promise<Contact[]> {
+    public getContacts(): Promise<Contact[]> {
         let self = this;
 
         // If there is a second call to getContactGroups() while the first call is still underway, I think we'll go
@@ -99,15 +100,13 @@ export class ContactsService {
             return Promise.resolve(self.contacts);
         }
         else {
-            let contactsDataset: any;
-            
             return new Promise<Contact[]>((resolve,reject) => {
                 self.openOrCreateDataset('Contacts').then((dataset:any) => {
-                    contactsDataset = dataset;
+                    self.contactsDataset = dataset;
                     console.log('promised dataset: ' + dataset);
-                    return self.syncDataset(contactsDataset);
+                    return self.syncDataset(self.contactsDataset);
                 }).then(() => {
-                    contactsDataset.getAllRecords((error,records) => {
+                    self.contactsDataset.getAllRecords((error,records) => {
                         if(error) {
                             reject(error);
                         }
@@ -115,8 +114,18 @@ export class ContactsService {
                             console.log('records: ' + records);
                             //records[0].name = 'asdf';
                             //resolve(CONTACT_GROUPS);
-                            self.contacts = records;
-                            resolve(records);
+                            
+                            let loadedContacts: Contact[] = [];
+                            
+                            records.map((record)=> {
+                                let loadedContact: Contact = JSON.parse(record.value);
+                                loadedContact.phone = record.key;
+                                loadedContacts.push(loadedContact);
+                            });
+                            
+                            self.contacts = loadedContacts;
+                                                        
+                            resolve(loadedContacts);
                         }
                     })
                 })
@@ -124,5 +133,27 @@ export class ContactsService {
         }
         
         //return Promise.resolve(CONTACT_GROUPS);
+    }
+    
+    // Copied from:
+    // http://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
+    public addContact(newContact: Contact) {
+        const phoneKey = newContact.phone;
+        
+        const recordValue: any = JSON.parse(JSON.stringify(newContact));
+        delete recordValue.phone;
+        
+        this.contacts.push(newContact);
+        
+        this.contactsDataset.put(phoneKey, JSON.stringify(recordValue), (err, record)=> {
+            if(err) {
+                console.log('Error adding contact: ' + err);
+            }
+            else {
+                console.log('record added.');
+                this.syncDataset(this.contactsDataset);
+            }
+            
+        });
     }
 }

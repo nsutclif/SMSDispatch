@@ -1,6 +1,9 @@
-Build out more UI.  Try to mock out data services
+need to validate phone numbers in form.
+also need to write sync event handlers.
 
-Authentication from  Angular -> AWS
+without those, any bad data in browser local storage completely borks us.
+        
+What about duplicate phone numbers?
 
 Cognito: use low-level SDK
 http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/CognitoSync.html

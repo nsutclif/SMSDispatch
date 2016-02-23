@@ -1,6 +1,6 @@
 export interface Contact {
-    name: string;
     phone: string;
-    leader: boolean;
+    name: string;
     group: string;
+    leader: boolean;
 }

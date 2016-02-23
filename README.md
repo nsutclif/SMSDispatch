@@ -1,0 +1,1 @@
+This is going to be an SMS dispatching app.  It's being built using a hodgepodge of technologies that I'm curious about.  It definitely doesn't work yet and we'll see if it ever does!
