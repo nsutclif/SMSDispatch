@@ -6,7 +6,7 @@ import {ContactFormComponent} from'./contact-form.component'
 @Component({
     selector: 'contact-list',
     template:`
-        <table class="table">
+        <table class="table table-compact">
           <tr>
             <th>Phone</th>
             <th>Name</th>

@@ -18,7 +18,6 @@ import {ContactsService} from './contacts.service';
         
         <button type="submit">Add</button>
       </form>
-      {{model.leader}}
     `
 })
 export class ContactFormComponent {
