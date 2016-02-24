@@ -9,6 +9,12 @@ What about duplicate phone numbers?
 
 # Features
 
+twilio config:
+
+* Account SID (really long strings)
+* Auth Token (really long strings)
+* Phone Number
+
 forward popup: display organizers group, individual organizers, volunteers group, but NOT individual volunteers.  Confirmation dialog to broadcast to a group?
 
 # Improve Login
