@@ -6,7 +6,12 @@ declare var AWS: any;
 @Injectable()
 export class AWSService {
     
+    // TODO: Define some types for this thing:    
+    private syncClient: any;
+     
     public signIn(): void {
+        let self = this;
+        
         FB.login(function (response) {
             // http://docs.aws.amazon.com/AWSJavaScriptSDK/guide/browser-configuring.html
             AWS.config.credentials = new AWS.CognitoIdentityCredentials({
@@ -21,6 +26,42 @@ export class AWSService {
             
             // fbUserId = response.authResponse.userID;
             // button.style.display = 'block';
+
+            AWS.config.credentials.get(() => {
+                self.syncClient = new AWS.CognitoSyncManager();
+            });
+        });
+    }
+        
+    public openOrCreateDataset(datasetName: string): Promise<any> {
+        let self = this;
+
+        return new Promise<any>((resolve,reject) => {
+            self.syncClient.openOrCreateDataset(datasetName, (err, dataset: any) => {
+                if(err) {
+                    reject(err);
+                }
+                else {
+                    resolve(dataset);
+                }
+            });
+        });
+    }
+    
+    public syncDataset(dataset: any): Promise<void> {        
+        return new Promise<void>((resolve,reject) => {
+            dataset.synchronize(
+                {
+                    onSuccess: (dataset, updates) => {
+                        console.log('synchronized.'); 
+                        resolve();
+                    },
+                    onFailure: (err) => {
+                        reject(err);
+                    }
+                    // TODO: Write an onConflict handler.
+                }, 
+                false);
         });
     }
 }
