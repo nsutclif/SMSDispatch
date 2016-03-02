@@ -14,7 +14,7 @@ declare var AWS: any;
 @Injectable()
 export class ContactsService {
     
-    private contacts: Contact[];
+    private contacts: Contact[] = [];
     private contactsDataset: any;
     
     public getContacts(): Promise<Contact[]> {
@@ -23,10 +23,6 @@ export class ContactsService {
     
     public loadContacts(): Promise<void> {
         let self = this;
-
-        // If there is a second call to getContactGroups() while the first call is still underway, I think we'll go
-        // to the server twice. 
-        // TODO: Improve.
         
         return new Promise<void>((resolve,reject) => {
             self._awsService.openOrCreateDataset('Contacts').then((dataset:any) => {
@@ -40,26 +36,20 @@ export class ContactsService {
                     }
                     else {
                         console.log('records: ' + records);
-                        //records[0].name = 'asdf';
-                        //resolve(CONTACT_GROUPS);
                         
-                        let loadedContacts: Contact[] = [];
+                        self.contacts.length = 0;
                         
                         records.map((record)=> {
                             let loadedContact: Contact = JSON.parse(record.value);
                             loadedContact.phone = record.key;
-                            loadedContacts.push(loadedContact);
+                            self.contacts.push(loadedContact);
                         });
-                        
-                        self.contacts = loadedContacts;
                                                     
                         resolve();
                     }
                 })
             })
         })
-        
-        //return Promise.resolve(CONTACT_GROUPS);
     }
     
     public addContact(newContact: Contact) {
