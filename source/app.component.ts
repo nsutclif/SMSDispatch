@@ -7,19 +7,29 @@ import {ContactsService} from './contacts.service';
 import {MessagesService} from './messages.service';
 import {ConfigService} from './config.service';
 import {ConfigFormComponent} from './config-form.component';
+import {AWSService} from './aws.service';
 
 @Component({
     selector: 'dispatch-app',
     template:`
-        <ul class="nav nav-tabs">
-            <li role="presentation" [class.active]="isRouteActive('messages')"><a [routerLink]="['/Messages']">Messages</a></li>
-            <li role="presentation" [class.active]="isRouteActive('contacts')"><a [routerLink]="['/Contacts']">Contacts</a></li>
-            <li role="presentation" [class.active]="isRouteActive('config')"><a [routerLink]="['/Config']">Config</a></li>
-        </ul>
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <div class="navbar-collapse">
+                    <ul class="nav navbar-nav navbar-left">
+                        <li role="presentation" [class.active]="isRouteActive('messages')"><a [routerLink]="['/Messages']">Messages</a></li>
+                        <li role="presentation" [class.active]="isRouteActive('contacts')"><a [routerLink]="['/Contacts']">Contacts</a></li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <button type="button" class="btn btn-default navbar-btn" (click)="signIn()">Sign in</button>
+                        <li role="presentation" [class.active]="isRouteActive('config')"><a [routerLink]="['/Config']">Config</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
         <router-outlet></router-outlet>
     `,
     directives: [MessageListComponent, ContactListComponent, ConfigFormComponent, ROUTER_DIRECTIVES],
-    providers: [ConfigService, ContactsService, MessagesService]
+    providers: [AWSService, ConfigService, ContactsService, MessagesService]
 })
 @RouteConfig([
     { path: "/messages", 
@@ -36,7 +46,7 @@ import {ConfigFormComponent} from './config-form.component';
 export class AppComponent {
     public title = 'SMS Dispatch';
     public currentRoute: string;
-    constructor(router: Router) {
+    constructor(router: Router, private _awsService: AWSService) {
         var component: AppComponent = this;
         router.subscribe( function(route: string) {
           component.currentRoute = route;  
@@ -49,5 +59,9 @@ export class AppComponent {
     
     isRouteActive(route: string): boolean {
         return route === this.currentRoute;
+    }
+    
+    signIn(): void {
+        this._awsService.signIn();
     }
 }
