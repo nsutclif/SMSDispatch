@@ -20,7 +20,7 @@ import {AWSService} from './aws.service';
                         <li role="presentation" [class.active]="isRouteActive('contacts')"><a [routerLink]="['/Contacts']">Contacts</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
-                        <button type="button" class="btn btn-default navbar-btn" (click)="signIn()">Sign in</button>
+                        <button *ngIf="!_awsService.signedIn()" type="button" class="btn btn-default navbar-btn" (click)="signIn()">Sign in</button>
                         <li *ngIf="_awsService.signedIn()" role="presentation" [class.active]="isRouteActive('config')"><a [routerLink]="['/Config']">Config</a></li>
                     </ul>
                 </div>
