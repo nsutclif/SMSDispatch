@@ -40,6 +40,10 @@ export class AWSService {
             });            
         });
     }
+    
+    public signedIn(): boolean {
+        return (typeof this.syncClient !== 'undefined');
+    }
         
     public openOrCreateDataset(datasetName: string): Promise<any> {
         let self = this;

@@ -15,18 +15,18 @@ import {AWSService} from './aws.service';
         <nav class="navbar navbar-default">
             <div class="container-fluid">
                 <div class="navbar-collapse">
-                    <ul class="nav navbar-nav navbar-left">
+                    <ul *ngIf="_awsService.signedIn()" class="nav navbar-nav navbar-left">
                         <li role="presentation" [class.active]="isRouteActive('messages')"><a [routerLink]="['/Messages']">Messages</a></li>
                         <li role="presentation" [class.active]="isRouteActive('contacts')"><a [routerLink]="['/Contacts']">Contacts</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
                         <button type="button" class="btn btn-default navbar-btn" (click)="signIn()">Sign in</button>
-                        <li role="presentation" [class.active]="isRouteActive('config')"><a [routerLink]="['/Config']">Config</a></li>
+                        <li *ngIf="_awsService.signedIn()" role="presentation" [class.active]="isRouteActive('config')"><a [routerLink]="['/Config']">Config</a></li>
                     </ul>
                 </div>
             </div>
         </nav>
-        <router-outlet></router-outlet>
+        <router-outlet *ngIf="_awsService.signedIn()"></router-outlet>
     `,
     directives: [MessageListComponent, ContactListComponent, ConfigFormComponent, ROUTER_DIRECTIVES],
     providers: [AWSService, ConfigService, ContactsService, MessagesService]
@@ -62,7 +62,9 @@ export class AppComponent {
     }
     
     signIn(): void {
-        // TODO: FIX THIS MESS
-        this._awsService.signIn().then( ()=>{ this._contactsService.loadContacts() } );
+        // TODO: FIX THIS MESS.
+        this._awsService.signIn().then( ()=>{ 
+            this._contactsService.loadContacts() 
+        });
     }
 }
