@@ -9,13 +9,21 @@ What about duplicate phone numbers?
 
 # Features
 
-twilio config:
+## Twilio config
 
 * Account SID (really long strings)
 * Auth Token (really long strings)
 * Phone Number
 
-forward popup: display organizers group, individual organizers, volunteers group, but NOT individual volunteers.  Confirmation dialog to broadcast to a group?
+## Contact Management
+
+* Delete Contacts
+* Edit Contacts
+
+## Messages
+
+* Add contact for message
+* forward popup: display organizers group, individual organizers, volunteers group, but NOT individual volunteers.  Confirmation dialog to broadcast to a group?
 
 # Improve Login
 
