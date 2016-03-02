@@ -118,8 +118,6 @@ export class ContactsService {
         //return Promise.resolve(CONTACT_GROUPS);
     }
     
-    // Copied from:
-    // http://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
     public addContact(newContact: Contact) {
         const phoneKey = newContact.phone;
         
