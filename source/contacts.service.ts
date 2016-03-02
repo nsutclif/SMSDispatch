@@ -18,47 +18,46 @@ export class ContactsService {
     private contactsDataset: any;
     
     public getContacts(): Promise<Contact[]> {
+        return Promise.resolve(this.contacts);
+    }
+    
+    public loadContacts(): Promise<void> {
         let self = this;
 
         // If there is a second call to getContactGroups() while the first call is still underway, I think we'll go
         // to the server twice. 
         // TODO: Improve.
         
-        if(self.contacts) {
-            return Promise.resolve(self.contacts);
-        }
-        else {
-            return new Promise<Contact[]>((resolve,reject) => {
-                self._awsService.openOrCreateDataset('Contacts').then((dataset:any) => {
-                    self.contactsDataset = dataset;
-                    console.log('promised dataset: ' + dataset);
-                    return self._awsService.syncDataset(self.contactsDataset);
-                }).then(() => {
-                    self.contactsDataset.getAllRecords((error,records) => {
-                        if(error) {
-                            reject(error);
-                        }
-                        else {
-                            console.log('records: ' + records);
-                            //records[0].name = 'asdf';
-                            //resolve(CONTACT_GROUPS);
-                            
-                            let loadedContacts: Contact[] = [];
-                            
-                            records.map((record)=> {
-                                let loadedContact: Contact = JSON.parse(record.value);
-                                loadedContact.phone = record.key;
-                                loadedContacts.push(loadedContact);
-                            });
-                            
-                            self.contacts = loadedContacts;
-                                                        
-                            resolve(loadedContacts);
-                        }
-                    })
+        return new Promise<void>((resolve,reject) => {
+            self._awsService.openOrCreateDataset('Contacts').then((dataset:any) => {
+                self.contactsDataset = dataset;
+                console.log('promised dataset: ' + dataset);
+                return self._awsService.syncDataset(self.contactsDataset);
+            }).then(() => {
+                self.contactsDataset.getAllRecords((error,records) => {
+                    if(error) {
+                        reject(error);
+                    }
+                    else {
+                        console.log('records: ' + records);
+                        //records[0].name = 'asdf';
+                        //resolve(CONTACT_GROUPS);
+                        
+                        let loadedContacts: Contact[] = [];
+                        
+                        records.map((record)=> {
+                            let loadedContact: Contact = JSON.parse(record.value);
+                            loadedContact.phone = record.key;
+                            loadedContacts.push(loadedContact);
+                        });
+                        
+                        self.contacts = loadedContacts;
+                                                    
+                        resolve();
+                    }
                 })
             })
-        }
+        })
         
         //return Promise.resolve(CONTACT_GROUPS);
     }
