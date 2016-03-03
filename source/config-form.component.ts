@@ -1,4 +1,4 @@
-import {Component} from 'angular2/core';
+import {Component, OnInit} from 'angular2/core';
 import {NgForm} from 'angular2/common';
 import {Config} from './config';
 import {ConfigService} from './config.service';
@@ -10,28 +10,41 @@ import {ConfigService} from './config.service';
         <form (ngSubmit)="onSubmit()">
             <div class="form-group">
               <label for="twilioAccountSID">Account SID</label>
-              <input type="text" (ngModelChange)="model.twilioAccountSID = $event" ngControl="twilioAccountSID">
+              <input type="text" [(ngModel)]="model.twilioAccountSID" ngControl="twilioAccountSID">
             </div>
             <div class="form-group">
                 <label for="twilioAuthToken">Auth Token</label>
-                <input type="text" (ngModelChange)="model.twilioAuthToken = $event" ngControl="twilioAuthToken">
+                <input type="text" [(ngModel)]="model.twilioAuthToken" ngControl="twilioAuthToken">
             </div>
             <div class="form-group">
                 <label for="twilioPhone">Phone</label>
-                <input type="text" (ngModelChange)="model.twilioPhone = $event" ngControl="twilioPhone">
+                <input type="text" [(ngModel)]="model.twilioPhone" ngControl="twilioPhone">
             </div>
         
-            <button type="submit">Submit</button>
+            <button type="submit">Update</button>
         </form>
     `
 })
-export class ConfigFormComponent {
+export class ConfigFormComponent implements OnInit {
     model: Config = {twilioAccountSID: '', twilioAuthToken: '', twilioPhone: ''};
     
     constructor(private _configService: ConfigService) {        
     }
     
     onSubmit() {
-        // this._contactsService.addContact(this.model);
+        this._configService.updateConfig(this.model.twilioAccountSID, this.model.twilioAuthToken, this.model.twilioPhone);
+    }
+    
+    resetModel() {
+        let self = this;
+        
+        self._configService.getConfig().then(config => {
+            // make a copy of the config for this form.
+            self.model = JSON.parse(JSON.stringify(config));
+        })
+    }
+    
+    ngOnInit() {
+        this.resetModel();
     }
 }

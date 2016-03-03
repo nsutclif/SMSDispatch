@@ -46,10 +46,14 @@ import {AWSService} from './aws.service';
 export class AppComponent {
     public title = 'SMS Dispatch';
     public currentRoute: string;
-    constructor(router: Router, private _awsService: AWSService, private _contactsService: ContactsService) {
+    constructor(
+        router: Router,
+        private _awsService: AWSService,
+        private _contactsService: ContactsService,
+        private _configService: ConfigService) {
         var component: AppComponent = this;
-        router.subscribe( function(route: string) {
-          component.currentRoute = route;  
+        router.subscribe(function(route: string) {
+            component.currentRoute = route;
         });
     }
     
@@ -64,7 +68,8 @@ export class AppComponent {
     signIn(): void {
         // TODO: FIX THIS MESS.
         this._awsService.signIn().then( ()=>{ 
-            this._contactsService.loadContacts() 
+            this._contactsService.loadContacts();
+            this._configService.loadConfig();
         });
     }
 }
