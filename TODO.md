@@ -9,12 +9,6 @@ What about duplicate phone numbers?
 
 # Features
 
-## Twilio config
-
-* Account SID (really long strings)
-* Auth Token (really long strings)
-* Phone Number
-
 ## Contact Management
 
 * Delete Contacts
