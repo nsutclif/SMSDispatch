@@ -11,13 +11,22 @@ import {ContactFormComponent} from'./contact-form.component'
             <th>Phone</th>
             <th>Name</th>
             <th>Group</th>
-            <th>Leader</th>
+            <th></th>
+            <th></th>
           </tr>
           <tr *ngFor="#contact of contacts">
             <td>{{contact.phone}}</td>
             <td>{{contact.name}}</td>
             <td>{{contact.group}}</td>
-            <td>{{contact.leader}}</td>
+            <td><span *ngIf="contact.leader">Leader</span></td>
+            <td>
+              <div class="dropdown">
+                <span class="glyphicon glyphicon-option-vertical dropdown-toggle" id="contactActionsDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"></span>
+                <ul class="dropdown-menu" aria-labelledby="contactActionsDropdown">
+                  <li><a (click)="deleteContact(contact)">Delete</a></li>
+                </ul>
+              </div>
+            </td>
           </tr>
         </table>
         <contact-form></contact-form>
@@ -39,6 +48,12 @@ export class ContactListComponent implements OnInit {
             this.contacts = contacts;
             console.log(JSON.stringify(contacts));
         });
+    }
+    
+    deleteContact(contact: Contact) {
+        if (window.confirm('Are you sure you want to delete this contact?')) {
+            this._contactsService.deleteContact(contact);
+        }        
     }
     
     // onSelect(message: SMSMessage) {

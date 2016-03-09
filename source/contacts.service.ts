@@ -27,11 +27,12 @@ export class ContactsService {
         return new Promise<void>((resolve,reject) => {
             self._awsService.openOrCreateDataset('Contacts').then((dataset:any) => {
                 self.contactsDataset = dataset;
-                console.log('promised dataset: ' + dataset);
+                console.log('promised contacts dataset: ' + dataset);
                 return self._awsService.syncDataset(self.contactsDataset);
             }).then(() => {
                 self.contactsDataset.getAllRecords((error,records) => {
                     if(error) {
+                        console.log('rejected: ' + error);
                         reject(error);
                     }
                     else {
@@ -40,9 +41,17 @@ export class ContactsService {
                         self.contacts.length = 0;
                         
                         records.map((record)=> {
-                            let loadedContact: Contact = JSON.parse(record.value);
-                            loadedContact.phone = record.key;
-                            self.contacts.push(loadedContact);
+                            // Records with blank values are marked for deletion.  
+                            // Supposedly they will eventually go away when they get synced with Amazon...
+                            if (record.value) {
+                                try {
+                                    let loadedContact: Contact = JSON.parse(record.value);
+                                    loadedContact.phone = record.key;
+                                    self.contacts.push(loadedContact);                                
+                                } catch (error) {
+                                    console.log('error loading record: ' + record + ': ' + error);
+                                }
+                            }
                         });
                                                     
                         resolve();
@@ -69,6 +78,20 @@ export class ContactsService {
                 this._awsService.syncDataset(this.contactsDataset);
             }
             
+        });
+    }
+    
+    public deleteContact(contact: Contact) {
+        let contactIndex = this.contacts.indexOf(contact);
+        this.contacts.splice(contactIndex, 1);
+        this.contactsDataset.remove(contact.phone, (err, record)=> {
+            if(err) {
+                console.log('Error deleting contact: ' + err);
+            }
+            else {
+                console.log('record deleted.');
+                this._awsService.syncDataset(this.contactsDataset);
+            }
         });
     }
     

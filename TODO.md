@@ -25,14 +25,16 @@ Investigate Auth Zero
 https://github.com/auth0/auth0-s3-sample
 https://auth0.com/authenticate/angular2/aws-addon
 
-Lazy loading scheme for Contacts has problems with multiple simultaneous callers.  How about we just call it once when someone logs in?
-
 Authenticating into Twilio
 
 # Security
 
 Prevent XSS for user-entered data
 http://martinfowler.com/articles/web-security-basics.
+
+# Cleanup
+
+My use of promises is a mess
 
 # Links
 
