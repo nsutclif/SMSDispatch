@@ -10,7 +10,7 @@
   },
   "license": "ISC",
   "dependencies": {
-    "angular2": "2.0.0-beta.12",
+    "angular2": "2.0.0-beta.13",
     "systemjs": "0.19.24",
     "es6-promise": "3.1.2",
     "es6-shim": "0.35.0",
@@ -19,13 +19,13 @@
     "zone.js": "0.6.6",
     "bootstrap": "3.3.6",
     "jquery": "2.2.2",
-    "aws-sdk": "2.2.46",
+    "aws-sdk": "2.2.48",
     "amazon-cognito-js": "git://github.com/aws/amazon-cognito-js.git#aaf5224eddaf4dc2aae22d9e1f2c1e0271d16a60"
   },
   "devDependencies": {
     "concurrently": "2.0.0",
     "lite-server": "2.1.0",
     "typescript": "1.8.9",
-    "typings": "0.7.9"
+    "typings": "0.7.11"
   }
 }
