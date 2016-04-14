@@ -19,7 +19,7 @@ import {ContactFormComponent} from'./contact-form.component'
             <td>{{contact.name}}</td>
             <td>{{contact.group}}</td>
             <td><span *ngIf="contact.leader">Leader</span></td>
-            <td>
+            <td align="right">
               <div class="dropdown">
                 <span class="glyphicon glyphicon-option-vertical dropdown-toggle" id="contactActionsDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"></span>
                 <ul class="dropdown-menu" aria-labelledby="contactActionsDropdown">

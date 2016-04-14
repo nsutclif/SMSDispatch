@@ -2,24 +2,21 @@ import {Component, OnInit} from 'angular2/core';
 import {SMSMessage} from './message';
 import {SMSMessageComponent} from './message.component';
 import {MessagesService} from './messages.service';
-
+import {MessageSendFormComponent} from './message-send-form.component';
 
 @Component({
     selector: 'message-list',
     template:`
-        <ul class="list-group">
-            <li *ngFor="#message of messages" 
-                class="list-group-item"
-                [class.active]="message === selectedMessage"
-                (click)="onSelect(message)">
-                <sms-message 
-                    [message]="message" 
-                    [selected]="message === selectedMessage">
-                </sms-message>
-            </li>
-      </ul>
+        <message-send-form></message-send-form>
+        <div *ngFor="#message of messages">
+            <sms-message 
+                (click)="onSelect(message)"
+                [message]="message" 
+                [selected]="message === selectedMessage">
+            </sms-message>
+        </div>
     `,
-    directives: [SMSMessageComponent]
+    directives: [SMSMessageComponent, MessageSendFormComponent]
 })
 export class MessageListComponent implements OnInit {
     public messages: SMSMessage[];
