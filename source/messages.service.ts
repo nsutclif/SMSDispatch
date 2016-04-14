@@ -35,18 +35,23 @@ export class MessagesService {
         if (res.status < 200 || res.status >= 300) {
             throw new Error('Bad response status: ' + res.status);
         }
+        console.log(res);
         let body = res.json();
-        console.log(body.data);
-        return body.data || { };
+        
+        if ((body) && (body.errorMessage)) {
+            throw new Error(body.errorMessage);
+        }
+        
+        return body || { };
     }
     
     private handleSendMessageError(error: any) {
         let errorMessage = error.message || 'Server error';
-        console.log('Error send message: ' + errorMessage);
+        console.log('Error sending message: ' + errorMessage);
         return Observable.throw(errorMessage);
     }
     
-    public sendMessage(message: SMSMessage) {
+    public sendMessage(message: SMSMessage): Observable<SMSMessage> {
         let body = JSON.stringify({
             message: {
                 to: message.to,
@@ -63,8 +68,8 @@ export class MessagesService {
         console.log('about to post: ' + body);
         console.log('to: ' + OUTGOING_MESSAGES_URL);
         
-        this.http.post(OUTGOING_MESSAGES_URL, body, options)
+        return this.http.post(OUTGOING_MESSAGES_URL, body, options)
                  .map(this.extractSendResponse)
-                 .catch(this.handleSendMessageError).subscribe();
+                 .catch(this.handleSendMessageError);
     }
 }
