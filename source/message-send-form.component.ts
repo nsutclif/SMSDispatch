@@ -10,11 +10,11 @@ import {MessagesService} from './messages.service';
         <form (ngSubmit)="onSubmit()">
             <div class="form-group">
                 <label for="to">To</label>
-                <input type="text" class="form-control" [(ngModel)]="model.to" ngControl="to" placeholder="To">
+                <input type="text" class="form-control" [(ngModel)]="to" ngControl="to" placeholder="To">
             </div>
             <div class="form-group">
                 <label for="to">Message</label>
-                <input type="textarea" class="form-control" [(ngModel)]="model.text" ngControl="body" placeholder="Message">
+                <input type="textarea" class="form-control" [(ngModel)]="message.text" ngControl="body" placeholder="Message">
             </div>
             <button type="submit" class="btn btn-default">Send</button>
             <span *ngIf="!success">{{lastError}}</span>
@@ -24,7 +24,8 @@ import {MessagesService} from './messages.service';
     `
 })
 export class MessageSendFormComponent implements OnInit {
-    model: SMSMessage = {id: 1, text: 'Sample Message 1', date: new Date(), to: '+7787710823', from: '+7788251056'};
+    message: SMSMessage = {id: 1, text: 'Sample Message 1', date: new Date(), to: '', from: ''};
+    to: string;
     lastError: string = '';
     success: boolean = false;
     
@@ -32,7 +33,9 @@ export class MessageSendFormComponent implements OnInit {
     }
     
     onSubmit() {
-        this._messagesService.sendMessage(this.model).subscribe(
+        let recipients: string[] = this.to.split(',');
+        
+        this._messagesService.sendMessages(this.message, recipients).subscribe(
             (message) => {
                 this.resetModel();
                 this.success = true;
@@ -46,7 +49,8 @@ export class MessageSendFormComponent implements OnInit {
     }
     
     resetModel() {
-        this.model = {id: 0, text: '', date: new Date(), to: '', from : ''};
+        this.message = {id: 0, text: '', date: new Date(), to: '', from : ''};
+        this.to = '';
     }
     
     ngOnInit() {

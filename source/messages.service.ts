@@ -72,4 +72,27 @@ export class MessagesService {
                  .map(this.extractSendResponse)
                  .catch(this.handleSendMessageError);
     }
+    
+    public sendMessages(message: SMSMessage, recipients: string[]): Observable<SMSMessage> {
+        try {
+            recipients = recipients.map((recipient) => {
+                // fix up and check the recipients.
+                let numbersOnly = recipient.replace(/[^0-9]+/g, '');
+                
+                if (numbersOnly.length < 10) {
+                    throw new Error('Recipient ' + recipient + ' needs to have at least 10 digits');
+                }
+                
+                return recipient;
+            });
+            
+            return Observable.forkJoin(recipients.map((recipient) => {
+                message.to = recipient;
+                return this.sendMessage(message);
+            }));            
+        } 
+        catch (error) {
+            return Observable.throw(error);
+        }
+    }
 }
