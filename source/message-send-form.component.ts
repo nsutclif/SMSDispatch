@@ -17,7 +17,8 @@ import {MessagesService} from './messages.service';
                 <input type="textarea" class="form-control" [(ngModel)]="model.text" ngControl="body" placeholder="Message">
             </div>
             <button type="submit" class="btn btn-default">Send</button>
-            <span>{{lastError}}</span>
+            <span *ngIf="!success">{{lastError}}</span>
+            <span class="glyphicon glyphicon-ok" *ngIf="success"></span>
         </form>
     </div>
     `
@@ -25,6 +26,7 @@ import {MessagesService} from './messages.service';
 export class MessageSendFormComponent implements OnInit {
     model: SMSMessage = {id: 1, text: 'Sample Message 1', date: new Date(), to: '+7787710823', from: '+7788251056'};
     lastError: string = '';
+    success: boolean = false;
     
     constructor(private _messagesService: MessagesService) {        
     }
@@ -33,9 +35,11 @@ export class MessageSendFormComponent implements OnInit {
         this._messagesService.sendMessage(this.model).subscribe(
             (message) => {
                 this.resetModel();
-                this.lastError = 'Sent';
+                this.success = true;
+                this.lastError = '';
             },
             (error) => {
+                this.success = false;
                 this.lastError = error;
             }
         );
