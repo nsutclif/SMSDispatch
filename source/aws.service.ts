@@ -70,8 +70,18 @@ export class AWSService {
                     },
                     onFailure: (err) => {
                         reject(err);
+                    },
+                    onConflict: (dataset, conflicts, callback) => {
+                        let resolved = [];
+                        conflicts.map((conflict) => {
+                            // For now, just go with remote record.
+                            console.log('conflict: ' + conflict);
+                            resolved.push(conflict.resolveWithRemoteRecord());
+                        });
+                        dataset.resolve(resolved, () => {
+                            return callback(true);
+                        });
                     }
-                    // TODO: Write an onConflict handler.
                 }, 
                 false);
         });

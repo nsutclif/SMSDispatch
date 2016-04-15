@@ -67,7 +67,7 @@ export class ContactsService {
         const recordValue: any = JSON.parse(JSON.stringify(newContact));
         delete recordValue.phone;
         
-        this.contacts.push(newContact);
+        let clonedContact: Contact = JSON.parse(JSON.stringify(newContact));
         
         this.contactsDataset.put(phoneKey, JSON.stringify(recordValue), (err, record)=> {
             if(err) {
@@ -76,6 +76,8 @@ export class ContactsService {
             else {
                 console.log('record added.');
                 this._awsService.syncDataset(this.contactsDataset);
+        
+                this.contacts.push(clonedContact);
             }
             
         });
