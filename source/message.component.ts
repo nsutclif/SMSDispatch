@@ -1,6 +1,7 @@
 import {Component, OnInit} from 'angular2/core';
 import {SMSMessage} from './message';
-import {Contact} from './contact'; 
+import {MessagesService} from './messages.service';
+import {Contact, ContactGroup} from './contact'; 
 import {ContactsService} from './contacts.service';
 
 @Component({
@@ -14,33 +15,18 @@ import {ContactsService} from './contacts.service';
                 <span>
                     {{message.text}}
                 </span>
-                <!--<span *ngIf="selected">
-                    <button type="button" class="btn btn-default">
-                        Done
-                    </button>
-                    <span class="dropdown">
-                        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                            Forward
-                            <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                            <template ngFor #contactGroup [ngForOf]="contactGroups" #groupIndex="index">
-                                <li><a href="#">{{contactGroup.name}}</a></li>
-                                
-                                <li *ngFor="#contact of contactGroup.contacts">
-                                    <a href="#">{{contact.name}}</a>
-                                </li>
-                                
-                                <li *ngIf="groupIndex < contactGroups.length - 1" role="separator" class="divider"></li>
-                            </template>
-                        </ul>
-                    </span>        
-                </span>-->
                 <span>
                     <span class="dropdown">
                         <span class="glyphicon glyphicon-option-vertical dropdown-toggle" id="contactActionsDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"></span>
                         <ul class="dropdown-menu" aria-labelledby="contactActionsDropdown">
-                            <li><a (click)="deleteContact(contact)">Delete</a></li>
+                            <template ngFor #contactGroup [ngForOf]="contactGroups" #groupIndex="index">
+                                <li>
+                                    <a (click)="dispatchToContactGroup(message, contactGroup)">Dispatch to {{contactGroup.name}}</a>
+                                </li>
+                                <li *ngFor="#contact of contactGroup.contacts">
+                                    <a (click)="DispatchToContact(message, contact)" *ngIf="contact.leader">Dispatch to {{contact.name}}</a>
+                                </li>
+                            </template>
                         </ul>
                     </span>
                 </span>
@@ -62,8 +48,9 @@ export class SMSMessageComponent implements OnInit {
     public message: SMSMessage;
     public selected: boolean;
     public contacts: Contact[];
+    public contactGroups: ContactGroup[];
     
-    constructor(private _contactsService: ContactsService) {        
+    constructor(private _contactsService: ContactsService, private _messagesService: MessagesService) {        
     }
     
     ngOnInit() {
@@ -71,6 +58,23 @@ export class SMSMessageComponent implements OnInit {
     }
     
     getContacts() {
-        this._contactsService.getContacts().then(contacts => this.contacts = contacts);
+        this._contactsService.getContacts().then((contacts) => {
+            this.contacts = contacts;
+            this.contactGroups = this._contactsService.getContactGroups();
+        });
+    }
+    
+    private DispatchToContact(message: SMSMessage, contact: Contact) {
+        let messageClone = JSON.parse(JSON.stringify(message));
+        messageClone.to = contact.phone;
+        this._messagesService.sendMessage(messageClone).subscribe();
+    }
+    
+    private dispatchToContactGroup(message: SMSMessage, contactGroup: ContactGroup) {
+        let messageClone = JSON.parse(JSON.stringify(message));
+        let recipients = contactGroup.contacts.map((contact) => {
+            return contact.phone;
+        });
+        this._messagesService.sendMessages(message, recipients).subscribe();
     }
 }

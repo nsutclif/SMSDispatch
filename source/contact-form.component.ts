@@ -8,15 +8,15 @@ import {ContactsService} from './contacts.service';
     template: `
       <form (ngSubmit)="onSubmit()">
         <label for="phone">Phone</label>
-        <input type="text" (ngModelChange)="model.phone = $event" ngControl="phone">
+        <input type="text" class="form-control" (ngModelChange)="model.phone = $event" ngControl="phone" placeholder="Phone">
         <label for="name">Name</label>
-        <input type="text" (ngModelChange)="model.name = $event" ngControl="name">
+        <input type="text" class="form-control" (ngModelChange)="model.name = $event" ngControl="name" placeholder="Name">
         <label for="group">Group</label>
-        <input type="text" (ngModelChange)="model.group = $event" ngControl="group">
+        <input type="text" class="form-control" (ngModelChange)="model.group = $event" ngControl="group" placeholder="Group">
         <label for="leader">Leader</label>
-        <input type="checkbox" (ngModelChange)="model.leader = $event" ngControl="leader">
+        <input type="checkbox" class="form-control" (ngModelChange)="model.leader = $event" ngControl="leader">
         
-        <button type="submit">Add</button>
+        <button type="submit" class="btn btn-default">Add</button>
       </form>
     `
 })

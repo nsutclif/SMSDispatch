@@ -10,6 +10,10 @@ What about duplicate phone numbers?
 The first time I add a contact, I get a weird "synchronize failed" error but it seems to synchronize after I add the second contact.
 Sometimes when I log in, the contacts fail to synchronize.  Possibly because I was doing a slow upload?  It doesn't seem to retry.
 
+# Performance
+
+Need to at least prevent client from requesting map files.
+
 # Features
 
 ## Contact Management

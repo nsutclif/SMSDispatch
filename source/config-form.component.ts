@@ -10,18 +10,18 @@ import {ConfigService} from './config.service';
         <form (ngSubmit)="onSubmit()">
             <div class="form-group">
               <label for="twilioAccountSID">Account SID</label>
-              <input type="text" [(ngModel)]="model.twilioAccountSID" ngControl="twilioAccountSID">
+              <input type="text" class="form-control" [(ngModel)]="model.twilioAccountSID" ngControl="twilioAccountSID" placeholder="Account SID">
             </div>
             <div class="form-group">
                 <label for="twilioAuthToken">Auth Token</label>
-                <input type="text" [(ngModel)]="model.twilioAuthToken" ngControl="twilioAuthToken">
+                <input type="text" class="form-control" [(ngModel)]="model.twilioAuthToken" ngControl="twilioAuthToken" placeholder="Auth Token">
             </div>
             <div class="form-group">
                 <label for="twilioPhone">Phone</label>
-                <input type="text" [(ngModel)]="model.twilioPhone" ngControl="twilioPhone">
+                <input type="text" class="form-control" [(ngModel)]="model.twilioPhone" ngControl="twilioPhone" placeholder="Phone">
             </div>
         
-            <button type="submit">Update</button>
+            <button type="submit" class="btn btn-default">Update</button>
         </form>
     `
 })

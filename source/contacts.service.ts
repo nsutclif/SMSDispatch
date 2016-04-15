@@ -1,6 +1,6 @@
 ///<reference path="../typings/browser/ambient/aws-sdk/aws-sdk.d.ts"/>
 import {Injectable} from 'angular2/core';
-import {Contact} from './contact';
+import {Contact, ContactGroup} from './contact';
 import {AWSService} from './aws.service';
 
 // NOTE: I'm pretty sure this is totally not the right way to do this.
@@ -15,10 +15,35 @@ declare var AWS: any;
 export class ContactsService {
     
     private contacts: Contact[] = [];
+    private contactGroups: ContactGroup[];
     private contactsDataset: any;
     
     public getContacts(): Promise<Contact[]> {
         return Promise.resolve(this.contacts);
+    }
+    
+    private buildContactGroups() {
+        let groupMap = new Map();
+        
+        this.contacts.map((contact: Contact)=>{
+            let contactGroup: ContactGroup = <ContactGroup>groupMap.get(contact.group);
+            if (!contactGroup) {
+                contactGroup = {name: contact.group, contacts: [contact]};
+                groupMap.set(contact.group, contactGroup);
+            }
+            else {
+                contactGroup.contacts.push(contact);
+            }
+        });
+        
+        this.contactGroups = [];
+        groupMap.forEach((value: ContactGroup)=> {
+            this.contactGroups.push(value);
+        });
+    }
+    
+    public getContactGroups(): ContactGroup[] {
+        return this.contactGroups;
     }
     
     public loadContacts(): Promise<void> {
@@ -53,7 +78,8 @@ export class ContactsService {
                                 }
                             }
                         });
-                                                    
+                        
+                        self.buildContactGroups();                            
                         resolve();
                     }
                 })
@@ -78,6 +104,7 @@ export class ContactsService {
                 this._awsService.syncDataset(this.contactsDataset);
         
                 this.contacts.push(clonedContact);
+                this.buildContactGroups();
             }
             
         });
@@ -85,13 +112,14 @@ export class ContactsService {
     
     public deleteContact(contact: Contact) {
         let contactIndex = this.contacts.indexOf(contact);
-        this.contacts.splice(contactIndex, 1);
         this.contactsDataset.remove(contact.phone, (err, record)=> {
             if(err) {
                 console.log('Error deleting contact: ' + err);
             }
             else {
                 console.log('record deleted.');
+                this.contacts.splice(contactIndex, 1);
+                this.buildContactGroups();
                 this._awsService.syncDataset(this.contactsDataset);
             }
         });

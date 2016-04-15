@@ -4,3 +4,8 @@ export interface Contact {
     group: string;
     leader: boolean;
 }
+
+export interface ContactGroup {
+    name: string;
+    contacts: Contact[];
+}

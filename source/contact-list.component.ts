@@ -6,6 +6,7 @@ import {ContactFormComponent} from'./contact-form.component'
 @Component({
     selector: 'contact-list',
     template:`
+        <contact-form></contact-form>
         <table class="table table-compact">
           <tr>
             <th>Phone</th>
@@ -29,7 +30,6 @@ import {ContactFormComponent} from'./contact-form.component'
             </td>
           </tr>
         </table>
-        <contact-form></contact-form>
     `,
     directives: [ContactFormComponent]
 })
@@ -46,7 +46,6 @@ export class ContactListComponent implements OnInit {
     getContacts() {
         this._contactsService.getContacts().then(contacts => {
             this.contacts = contacts;
-            console.log(JSON.stringify(contacts));
         });
     }
     
