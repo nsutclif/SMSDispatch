@@ -6,10 +6,20 @@ import {ContactFormComponent} from'./contact-form.component'
 @Component({
     selector: 'contact-list',
     template:`
-      <button class="btn btn-default" type="submit" (click)="addLotsOfContacts()">Add lots of contacts</button>
+      <form (ngSubmit)="addLotsOfContacts()">
+        <input type="text" class="form-control" (ngModelChange)="areaCode = $event" ngControl="areaCode" placeholder="555">
+        <input type="text" class="form-control" (ngModelChange)="officeCode = $event" ngControl="officeCode" placeholder="555">
+        <input type="text" class="form-control" (ngModelChange)="stationNumber = $event" ngControl="stationNumber" placeholder="5555">
+        <button class="btn btn-default" type="submit">Add lots of contacts</button>
+      </form>
     `
 })
 export class DebugComponent {
+    areaCode: string = '';
+    officeCode: string = '';
+    stationNumber: string = '';
+    
+    
     public contacts: Contact[];
     
     constructor(private _contactsService: ContactsService) {        
@@ -25,7 +35,10 @@ export class DebugComponent {
                 obfuscators.map(obfuscator3 => {
                     obfuscators.map(obfuscator4 => {
                         obfuscators.map(obfuscator5 => {
-                            phoneNumbers.push('778' + obfuscator1 + obfuscator2 + obfuscator3 + obfuscator4 + '825' + obfuscator5 + '1056');
+                            phoneNumbers.push(
+                                this.areaCode + obfuscator1 + obfuscator2 + obfuscator3 + obfuscator4 + 
+                                this.officeCode + obfuscator5 + 
+                                this.stationNumber);
                         });
                     });              
                 });
@@ -39,7 +52,8 @@ export class DebugComponent {
                 group: 'Volunteers',
                 leader: false 
             };
-            this._contactsService.addContact(newContact);
+            //this._contactsService.addContact(newContact);
+            console.log(JSON.stringify(newContact));
         });
     }
     
