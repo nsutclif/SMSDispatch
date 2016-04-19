@@ -40,6 +40,17 @@ export class ContactsService {
         groupMap.forEach((value: ContactGroup)=> {
             this.contactGroups.push(value);
         });
+        
+        // also sort the contacts:
+        this.contacts.sort((a: Contact, b: Contact): number => {
+            let result =  a.group.localeCompare(b.group);
+            
+            if (result === 0) {
+                result = a.name.localeCompare(b.name);
+            }
+            
+            return result;
+        });
     }
     
     public getContactGroups(): ContactGroup[] {
