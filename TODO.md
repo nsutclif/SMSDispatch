@@ -1,3 +1,8 @@
+# Project
+
+Set up a Test Account in Facebook
+Move the Cognito Pool out of my personal account.
+
 # Bugs
 
 need to validate phone numbers in form.
@@ -16,15 +21,16 @@ Need to at least prevent client from requesting map files.
 
 # Features
 
-## Contact Management
-
-* Delete Contacts
-* Edit Contacts
-
 ## Messages
 
+* Display messages!
 * Add contact for message
-* forward popup: display organizers group, individual organizers, volunteers group, but NOT individual volunteers.  Confirmation dialog to broadcast to a group?
+* Send a message to a group (maybe a popup by the phone field?)
+* Progress/success/error indicator for dispatch feature?
+
+## Contact Management
+
+* Edit Contacts
 
 # Improve Login
 

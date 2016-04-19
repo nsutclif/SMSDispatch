@@ -8,6 +8,7 @@ import {MessagesService} from './messages.service';
 import {ConfigService} from './config.service';
 import {ConfigFormComponent} from './config-form.component';
 import {AWSService} from './aws.service';
+import {DebugComponent} from './debug.component';
 
 @Component({
     selector: 'dispatch-app',
@@ -28,7 +29,7 @@ import {AWSService} from './aws.service';
         </nav>
         <router-outlet *ngIf="_awsService.signedIn()"></router-outlet>
     `,
-    directives: [MessageListComponent, ContactListComponent, ConfigFormComponent, ROUTER_DIRECTIVES],
+    directives: [MessageListComponent, ContactListComponent, ConfigFormComponent, DebugComponent, ROUTER_DIRECTIVES],
     providers: [AWSService, ConfigService, ContactsService, MessagesService]
 })
 @RouteConfig([
@@ -41,7 +42,10 @@ import {AWSService} from './aws.service';
       component: ContactListComponent },
     { path: "/config", 
       name: "Config", 
-      component: ConfigFormComponent }
+      component: ConfigFormComponent },
+    { path: "/debug", 
+      name: "Debug", 
+      component: DebugComponent }
 ])
 export class AppComponent {
     public title = 'SMS Dispatch';
