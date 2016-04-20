@@ -1,7 +1,10 @@
 # Project
 
-Set up a Test Account in Facebook
-Move the Cognito Pool out of my personal account.
+* Move the Cognito Pool out of my personal account.
+
+# Testing
+
+* Come up with a set of representative tests
 
 Groups:
 - Course group (biggest) 100?
@@ -23,7 +26,7 @@ Sometimes when I log in, the contacts fail to synchronize.  Possibly because I w
 
 # Performance
 
-Need to at least prevent client from requesting map files.
+* Need to at least prevent client from requesting map files.
 
 # Features
 
@@ -32,10 +35,9 @@ Need to at least prevent client from requesting map files.
 * Display messages!
 * Send a message to a group (maybe a popup by the phone field?)
 * Progress/success/error indicator for dispatch feature?
-* Add contact for message
-* Change "Dispatch" to "Forward"
 * Reply to a message
 * When forwarding a message, include the original phone number (refer to Terry's email?) with "SMS:" prefix
+* Add contact for message
 
 ## Contact Management
 
@@ -54,12 +56,14 @@ Authenticating into Twilio
 
 # Security
 
-Prevent XSS for user-entered data
+* Enable signing on API Gateway?
+* Prevent XSS for user-entered data
 http://martinfowler.com/articles/web-security-basics.
 
 # Cleanup
 
-My use of promises is a mess
+* replace JSON.parse(JSON.stringify) with Assign.
+* My use of promises is a mess
 
 # Links
 

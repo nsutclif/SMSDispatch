@@ -21,10 +21,10 @@ import {ContactsService} from './contacts.service';
                         <ul class="dropdown-menu" aria-labelledby="contactActionsDropdown">
                             <template ngFor #contactGroup [ngForOf]="contactGroups" #groupIndex="index">
                                 <li>
-                                    <a (click)="dispatchToContactGroup(message, contactGroup)">Dispatch to {{contactGroup.name}}</a>
+                                    <a (click)="dispatchToContactGroup(message, contactGroup)">Forward to {{contactGroup.name}}</a>
                                 </li>
                                 <li *ngFor="#contact of contactGroup.contacts">
-                                    <a (click)="DispatchToContact(message, contact)" *ngIf="contact.leader">Dispatch to {{contact.name}}</a>
+                                    <a (click)="DispatchToContact(message, contact)" *ngIf="contact.leader">Forward to {{contact.name}}</a>
                                 </li>
                             </template>
                         </ul>
