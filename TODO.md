@@ -3,10 +3,16 @@
 Set up a Test Account in Facebook
 Move the Cognito Pool out of my personal account.
 
+Groups:
+- Course group (biggest) 100?
+- Food Service (not registered?) 10?
+- First Aid 10-20
+- Water Stations: 30
+
 # Bugs
 
 need to validate phone numbers in form.
-also need to write sync event handlers.
+also need to write sync event handlers. (at least partially done)
 
 without those, any bad data in browser local storage completely borks us.
 
@@ -24,13 +30,19 @@ Need to at least prevent client from requesting map files.
 ## Messages
 
 * Display messages!
-* Add contact for message
 * Send a message to a group (maybe a popup by the phone field?)
 * Progress/success/error indicator for dispatch feature?
+* Add contact for message
+* Change "Dispatch" to "Forward"
+* Reply to a message
+* When forwarding a message, include the original phone number (refer to Terry's email?) with "SMS:" prefix
 
 ## Contact Management
 
+* Name column before phone column in contacts grid
 * Edit Contacts
+* Search and sort
+* Import/export contacts
 
 # Improve Login
 
