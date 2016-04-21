@@ -1,41 +1,61 @@
 import {Component, OnInit} from 'angular2/core';
-import {NgForm} from 'angular2/common';
+import {NgForm, ControlGroup, FormBuilder, Validators, FORM_DIRECTIVES} from 'angular2/common';
 import {SMSMessage} from './message';
 import {MessagesService} from './messages.service';
+
+// Using an ngFormModel form seems to be a lot faster than the [()] (two way binding) type of
+// form.  I couldn't figure out how to reset the values on a (ngModelChange) (one way binding)
+// type of form.
 
 @Component({
     selector: 'message-send-form',
     template: `
     <div class="panel">
-        <form (ngSubmit)="onSubmit()">
+        <form [ngFormModel]="form" (ngSubmit)="onSubmit()">
             <div class="form-group">
                 <label for="to">To</label>
-                <input type="text" class="form-control" [(ngModel)]="to" ngControl="to" placeholder="To">
+                <input type="text" class="form-control" ngControl="to" placeholder="To">
             </div>
             <div class="form-group">
                 <label for="to">Message</label>
-                <input type="textarea" class="form-control" [(ngModel)]="message.text" ngControl="body" placeholder="Message">
+                <input type="textarea" class="form-control" ngControl="body" placeholder="Message">
             </div>
             <button type="submit" class="btn btn-default">Send</button>
             <span *ngIf="!success">{{lastError}}</span>
             <span class="glyphicon glyphicon-ok" *ngIf="success"></span>
         </form>
     </div>
-    `
+    `,
+    directives: [FORM_DIRECTIVES]
 })
 export class MessageSendFormComponent implements OnInit {
     message: SMSMessage = {id: '', text: 'Sample Message 1', date: new Date(), to: '', from: ''};
     to: string;
     lastError: string = '';
     success: boolean = false;
+    form: ControlGroup;
     
-    constructor(private _messagesService: MessagesService) {        
+    constructor(private _messagesService: MessagesService, fb: FormBuilder) {
+        this.form = fb.group({
+            to: ['', Validators.required],
+            body: ['', Validators.required]
+        });
     }
     
     onSubmit() {
-        let recipients: string[] = this.to.split(',');
+        console.log(this.form.value);
         
-        this._messagesService.sendMessages(this.message, recipients).subscribe(
+        let recipients: string[] = this.form.value.to.split(',');
+        
+        let message: SMSMessage = {
+            id: '',
+            text: this.form.value.body,
+            date: new Date(),
+            to: '',
+            from: ''            
+        };
+        
+        this._messagesService.sendMessages(message, recipients).subscribe(
             (message) => {
                 this.resetModel();
                 this.success = true;
@@ -49,8 +69,10 @@ export class MessageSendFormComponent implements OnInit {
     }
     
     resetModel() {
-        this.message = {id: '', text: '', date: new Date(), to: '', from : ''};
-        this.to = '';
+        //this.message = {id: '', text: '', date: new Date(), to: '', from : ''};
+        //this.to = '';
+        this.form.value.to = '';
+        this.form.value.body = '';
     }
     
     ngOnInit() {

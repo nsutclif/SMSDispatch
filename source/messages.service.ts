@@ -15,7 +15,7 @@ const BASE_API_URL: string = 'https://pn52ql1d48.execute-api.us-east-1.amazonaws
 const MESSAGES_URL: string = BASE_API_URL + '/messages';
 const OUTGOING_MESSAGES_URL: string = MESSAGES_URL + '/outgoing';
 
-const MESSAGES_PER_CALL = 250;
+const MESSAGES_PER_CALL = 100;
 
 @Injectable()
 export class MessagesService {
@@ -63,11 +63,10 @@ export class MessagesService {
               console.log('Messages: ' + dtoMessages.length);
               
               if(dtoMessages.length > 0) {
-                  //this.loadAll();
+                  this.loadAll();
               } else {
                   // TODO: Stop doing this.
                   // http://chariotsolutions.com/blog/post/angular2-observables-http-separating-services-components/
-                  console.log('setting timeout');
                   setTimeout(this.loadAll.bind(this), 5000);
               }
           }, (error) => {
