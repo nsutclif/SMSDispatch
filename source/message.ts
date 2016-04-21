@@ -1,5 +1,5 @@
 export interface SMSMessage {
-    id: number;
+    id: string;
     text: string;
     date: Date;
     to: string;

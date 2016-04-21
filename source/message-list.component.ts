@@ -1,4 +1,6 @@
-import {Component, OnInit} from 'angular2/core';
+import {Component, OnInit, OnDestroy} from 'angular2/core';
+import {Observable} from 'rxjs/Observable';
+import {Subscription} from 'rxjs/Subscription';
 import {SMSMessage} from './message';
 import {SMSMessageComponent} from './message.component';
 import {MessagesService} from './messages.service';
@@ -18,22 +20,30 @@ import {MessageSendFormComponent} from './message-send-form.component';
     `,
     directives: [SMSMessageComponent, MessageSendFormComponent]
 })
-export class MessageListComponent implements OnInit {
+export class MessageListComponent implements OnInit, OnDestroy {
     public messages: SMSMessage[];
     public selectedMessage: SMSMessage;
+    
+    private messages$: Observable<SMSMessage[]>
+    private messageSubscription: Subscription;
     
     onSelect(message: SMSMessage) {
         this.selectedMessage = message;
     }
     
-    constructor(private _messagesService: MessagesService) {        
+    constructor(private _messagesService: MessagesService) {
+        this.messages$ = this._messagesService.messages$;
+        this.messageSubscription = this.messages$.subscribe((messages: SMSMessage[]) => {
+            this.messages = messages;
+        })
     }
     
     ngOnInit() {
-        this.getContacts();
+        this._messagesService.loadAll();
     }
     
-    getContacts() {
-        this._messagesService.getMessages().then(messages => this.messages = messages);
+    ngOnDestroy() {
+        // prevent memory leak when component destroyed:
+        this.messageSubscription.unsubscribe();
     }
 }

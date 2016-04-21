@@ -1,34 +1,78 @@
 import {Injectable} from 'angular2/core';
 import {Http, Response, Headers, RequestOptions} from 'angular2/http';
 import {Observable} from 'rxjs/Observable';
+import {Observer} from 'rxjs/Observer';
 import {SMSMessage} from './message';
 
-var MESSAGES: SMSMessage[] = [
-    { "id": 1, "text": "Sample Message 1", "date": new Date(), "to": "+7787710823", "from": "+7788251056" },
-    { "id": 2, "text": "Sample Message 2", "date": new Date(), "to": "+7787710823", "from": "+7788251056" },
-    { "id": 3, "text": "Sample Message 3", "date": new Date(), "to": "+7787710823", "from": "+7788251056" },
-    { "id": 4, "text": "Sample Message 4", "date": new Date(), "to": "+7787710823", "from": "+7788251056" },
-    { "id": 5, "text": "Sample Message 5", "date": new Date(), "to": "+7787710823", "from": "+7788251056" },
-    { "id": 6, "text": "Sample Message 6", "date": new Date(), "to": "+7787710823", "from": "+7788251056" },
-    { "id": 7, "text": "Sample Reply 7", "date": new Date(), "to": "+7788251056", "from": "+7787710823" },
-    { "id": 8, "text": "Sample Reply 8", "date": new Date(), "to": "+7788251056", "from": "+7787710823" },
-    { "id": 9, "text": "Sample Reply 9", "date": new Date(), "to": "+7788251056", "from": "+7787710823" },
-    { "id": 10, "text": "Sample Message 10", "date": new Date(), "to": "+7787710823", "from": "+7788251056" },
-    { "id": 11, "text": "Sample Message 11", "date": new Date(), "to": "+7787710823", "from": "+7788251056" },
-    { "id": 12, "text": "Sample Message 12", "date": new Date(), "to": "+7787710823", "from": "+7788251056" },
-    { "id": 13, "text": "Sample Message 13", "date": new Date(), "to": "+7787710823", "from": "+7788251056" }
-]
+// HTTP polling example:
+// http://chariotsolutions.com/blog/post/angular2-observables-http-separating-services-components/
+// Also useful:
+// http://www.syntaxsuccess.com/viewarticle/angular-2.0-and-http
+// All in on observables:
+// https://coryrylan.com/blog/angular-2-observable-data-services
 
-const BASE_API_URL: string = 'https://pn52ql1d48.execute-api.us-east-1.amazonaws.com/prod/';
-const OUTGOING_MESSAGES_URL: string = BASE_API_URL + 'messages/outgoing/';
+const BASE_API_URL: string = 'https://pn52ql1d48.execute-api.us-east-1.amazonaws.com/prod';
+const MESSAGES_URL: string = BASE_API_URL + '/messages';
+const OUTGOING_MESSAGES_URL: string = MESSAGES_URL + '/outgoing';
+
+const MESSAGES_PER_CALL = 250;
 
 @Injectable()
 export class MessagesService {
-    constructor (private http: Http) {
+    messages$: Observable<SMSMessage[]>;
+    private _messagesObserver: Observer<SMSMessage[]>;
+    private _dataStore :{
+        messages: SMSMessage[];
     }
     
-    public getMessages() {
-        return Promise.resolve(MESSAGES);
+    constructor (private _http: Http) {
+        this._dataStore = {messages: []};
+        this.messages$ = new Observable((observer)=> {
+            this._messagesObserver = observer;
+        }).share();
+    }
+    
+    private getNextMessagePage
+    
+    loadAll() {
+        // TODO: Use hypermedia style of pagination on the server side.
+        let requestURL = MESSAGES_URL + '?Skip=' + this._dataStore.messages.length + '&Limit=' + MESSAGES_PER_CALL;
+        let subscription = this._http.get(requestURL)
+          .subscribe((response: Response) => {
+              let dtoMessages: any[] = response.json();
+              if (!Array.isArray(dtoMessages)) {
+                  console.log('response.json is not an array: ' + response.json());
+                  dtoMessages = [];
+              }
+
+              dtoMessages.map(dtoMessage => {
+                  this._dataStore.messages.unshift({
+                      id: dtoMessage.id,
+                      text: dtoMessage.body,
+                      date: dtoMessage.date_created,
+                      to: dtoMessage.to,
+                      from: dtoMessage.from
+                  });
+              });
+              
+              this._messagesObserver.next(this._dataStore.messages);
+              
+              // TODO: Stop using recursion here
+              // http://stackoverflow.com/questions/35254323/rxjs-observable-pagination
+              
+              console.log('Messages: ' + dtoMessages.length);
+              
+              if(dtoMessages.length > 0) {
+                  //this.loadAll();
+              } else {
+                  // TODO: Stop doing this.
+                  // http://chariotsolutions.com/blog/post/angular2-observables-http-separating-services-components/
+                  console.log('setting timeout');
+                  setTimeout(this.loadAll.bind(this), 5000);
+              }
+          }, (error) => {
+              console.log('Eror loading messages: ' + error);
+          })
     }
     
     private extractSendResponse(res: Response) {
@@ -68,7 +112,7 @@ export class MessagesService {
         console.log('about to post: ' + body);
         console.log('to: ' + OUTGOING_MESSAGES_URL);
         
-        return this.http.post(OUTGOING_MESSAGES_URL, body, options)
+        return this._http.post(OUTGOING_MESSAGES_URL, body, options)
                  .map(this.extractSendResponse)
                  .catch(this.handleSendMessageError);
     }

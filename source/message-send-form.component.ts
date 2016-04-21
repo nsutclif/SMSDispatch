@@ -24,7 +24,7 @@ import {MessagesService} from './messages.service';
     `
 })
 export class MessageSendFormComponent implements OnInit {
-    message: SMSMessage = {id: 1, text: 'Sample Message 1', date: new Date(), to: '', from: ''};
+    message: SMSMessage = {id: '', text: 'Sample Message 1', date: new Date(), to: '', from: ''};
     to: string;
     lastError: string = '';
     success: boolean = false;
@@ -49,7 +49,7 @@ export class MessageSendFormComponent implements OnInit {
     }
     
     resetModel() {
-        this.message = {id: 0, text: '', date: new Date(), to: '', from : ''};
+        this.message = {id: '', text: '', date: new Date(), to: '', from : ''};
         this.to = '';
     }
     
