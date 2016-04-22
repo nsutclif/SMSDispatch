@@ -29,7 +29,7 @@ import {ContactsService} from './contacts.service';
                                             <a (click)="dispatchToContactGroup(message, contactGroup)">Forward to {{contactGroup.name}}</a>
                                         </li>
                                         <li *ngFor="#contact of contactGroup.contacts">
-                                            <a (click)="DispatchToContact(message, contact)" *ngIf="contact.leader">Forward to {{contact.name}}</a>
+                                            <a (click)="dispatchToContact(message, contact)" *ngIf="contact.leader">Forward to {{contact.name}}</a>
                                         </li>
                                     </template>
                                 </ul>
@@ -72,17 +72,27 @@ export class SMSMessageComponent implements OnInit {
         });
     }
     
-    private DispatchToContact(message: SMSMessage, contact: Contact) {
-        let messageClone = JSON.parse(JSON.stringify(message));
+    private getClonedMessageForDispatch(original: SMSMessage): SMSMessage {
+        let messageClone = JSON.parse(JSON.stringify(original));
+        
+        // include the original sender's phone number:
+        messageClone.text = 'From sms:' + original.from + ' - ' + messageClone.text;
+        
+        return messageClone;
+    }
+    
+    private dispatchToContact(message: SMSMessage, contact: Contact) {
+        let messageClone = this.getClonedMessageForDispatch(message);
         messageClone.to = contact.phone;
         this._messagesService.sendMessage(messageClone).subscribe();
     }
     
     private dispatchToContactGroup(message: SMSMessage, contactGroup: ContactGroup) {
-        let messageClone = JSON.parse(JSON.stringify(message));
+        let messageClone = this.getClonedMessageForDispatch(message);
+        
         let recipients = contactGroup.contacts.map((contact) => {
             return contact.phone;
         });
-        this._messagesService.sendMessages(message, recipients).subscribe();
+        this._messagesService.sendMessages(messageClone, recipients).subscribe();
     }
 }

@@ -33,11 +33,8 @@ export class MessageSendFormComponent implements OnInit {
     success: boolean = false;
     form: ControlGroup;
     
-    constructor(private _messagesService: MessagesService, fb: FormBuilder) {
-        this.form = fb.group({
-            to: ['', Validators.required],
-            body: ['', Validators.required]
-        });
+    constructor(private _messagesService: MessagesService, private _formBuilder: FormBuilder) {
+        this.resetModel();
     }
     
     onSubmit() {
@@ -68,10 +65,10 @@ export class MessageSendFormComponent implements OnInit {
     }
     
     resetModel() {
-        //this.message = {id: '', text: '', date: new Date(), to: '', from : ''};
-        //this.to = '';
-        this.form.value.to = '';
-        this.form.value.body = '';
+        this.form = this._formBuilder.group({
+            to: ['', Validators.required],
+            body: ['', Validators.required]
+        });
     }
     
     ngOnInit() {

@@ -32,12 +32,16 @@ Sometimes when I log in, the contacts fail to synchronize.  Possibly because I w
 
 ## Messages
 
-* Display messages!
 * Send a message to a group (maybe a popup by the phone field?)
-* Progress/success/error indicator for dispatch feature?
 * Reply to a message
-* When forwarding a message, include the original phone number (refer to Terry's email?) with "SMS:" prefix
+* Add "Forward To..." feature?
 * Add contact for message
+
+## Dispatching (waiting for server side changes)
+
+* Display contact/group names in message list
+* Include original sender's name when forwarding a message
+* Progress/success/error indicator for dispatch feature?
 
 ## Contact Management
 
@@ -45,6 +49,10 @@ Sometimes when I log in, the contacts fail to synchronize.  Possibly because I w
 * Edit Contacts
 * Search and sort
 * Import/export contacts
+
+## Configuration
+
+* Cancel/Reset button on form
 
 # Improve Login
 
