@@ -29,8 +29,6 @@ import {MessagesService} from './messages.service';
     directives: [FORM_DIRECTIVES]
 })
 export class MessageSendFormComponent implements OnInit {
-    message: SMSMessage = {id: '', text: 'Sample Message 1', date: new Date(), to: '', from: ''};
-    to: string;
     lastError: string = '';
     success: boolean = false;
     form: ControlGroup;
@@ -52,7 +50,8 @@ export class MessageSendFormComponent implements OnInit {
             text: this.form.value.body,
             date: new Date(),
             to: '',
-            from: ''            
+            from: '',
+            outgoing: true,
         };
         
         this._messagesService.sendMessages(message, recipients).subscribe(

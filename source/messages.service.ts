@@ -3,6 +3,7 @@ import {Http, Response, Headers, RequestOptions} from 'angular2/http';
 import {Observable} from 'rxjs/Observable';
 import {Observer} from 'rxjs/Observer';
 import {SMSMessage} from './message';
+import {ConfigService} from './config.service';
 
 // HTTP polling example:
 // http://chariotsolutions.com/blog/post/angular2-observables-http-separating-services-components/
@@ -16,6 +17,7 @@ const MESSAGES_URL: string = BASE_API_URL + '/messages';
 const OUTGOING_MESSAGES_URL: string = MESSAGES_URL + '/outgoing';
 
 const MESSAGES_PER_CALL = 100;
+const POLLING_INTERVAL = 10 * 1000;
 
 @Injectable()
 export class MessagesService {
@@ -32,7 +34,9 @@ export class MessagesService {
         }).share();
     }
     
-    private getNextMessagePage
+    stripPhoneNumber(phoneNumber: string): string {
+        return phoneNumber.replace(/[^0-9]+/g, '');
+    }
     
     loadAll() {
         // TODO: Use hypermedia style of pagination on the server side.
@@ -46,12 +50,14 @@ export class MessagesService {
               }
 
               dtoMessages.map(dtoMessage => {
+                  console.log(JSON.stringify(dtoMessage));
                   this._dataStore.messages.unshift({
                       id: dtoMessage.id,
                       text: dtoMessage.body,
                       date: dtoMessage.date_created,
                       to: dtoMessage.to,
-                      from: dtoMessage.from
+                      from: dtoMessage.from,
+                      outgoing: dtoMessage.direction === 'outbound-api'
                   });
               });
               
@@ -67,7 +73,7 @@ export class MessagesService {
               } else {
                   // TODO: Stop doing this.
                   // http://chariotsolutions.com/blog/post/angular2-observables-http-separating-services-components/
-                  setTimeout(this.loadAll.bind(this), 5000);
+                  setTimeout(this.loadAll.bind(this), POLLING_INTERVAL);
               }
           }, (error) => {
               console.log('Eror loading messages: ' + error);
@@ -120,7 +126,7 @@ export class MessagesService {
         try {
             recipients = recipients.map((recipient) => {
                 // fix up and check the recipients.
-                let numbersOnly = recipient.replace(/[^0-9]+/g, '');
+                let numbersOnly = this.stripPhoneNumber(recipient);
                 
                 if (numbersOnly.length < 10) {
                     throw new Error('Recipient ' + recipient + ' needs to have at least 10 digits');

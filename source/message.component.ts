@@ -8,38 +8,46 @@ import {ContactsService} from './contacts.service';
     selector: 'sms-message',
     template:`
         <div class="message">
-            <span>
-                {{message.from}}
-            </span>
-            <span class="panel panel-default bubble">
-                <span>
-                    {{message.text}}
-                </span>
-                <span>
-                    <span class="dropdown">
-                        <span class="glyphicon glyphicon-option-vertical dropdown-toggle" id="contactActionsDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"></span>
-                        <ul class="dropdown-menu" aria-labelledby="contactActionsDropdown">
-                            <template ngFor #contactGroup [ngForOf]="contactGroups" #groupIndex="index">
-                                <li>
-                                    <a (click)="dispatchToContactGroup(message, contactGroup)">Forward to {{contactGroup.name}}</a>
-                                </li>
-                                <li *ngFor="#contact of contactGroup.contacts">
-                                    <a (click)="DispatchToContact(message, contact)" *ngIf="contact.leader">Forward to {{contact.name}}</a>
-                                </li>
-                            </template>
-                        </ul>
-                    </span>
-                </span>
-            </span>
+            <div class="container-fluid">
+                <div class="row" *ngIf="message.outgoing">
+                    <div class="col-md-2">
+                    </div>
+                    <div class="col-md-10">
+                        <div>To: {{message.to}}</div>
+                        <div class="panel panel-default bubble">{{message.text}}</div>
+                    </div>
+                </div>
+                <div class="row" *ngIf="!message.outgoing">
+                    <div class="col-md-10">
+                        <div>{{message.from}}:</div>
+                        <div class="panel panel-default bubble">
+                            <span class="dropdown">
+                                <span class="glyphicon glyphicon-option-vertical dropdown-toggle" id="contactActionsDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"></span>
+                                <ul class="dropdown-menu" aria-labelledby="contactActionsDropdown">
+                                    <template ngFor #contactGroup [ngForOf]="contactGroups" #groupIndex="index">
+                                        <li>
+                                            <a (click)="dispatchToContactGroup(message, contactGroup)">Forward to {{contactGroup.name}}</a>
+                                        </li>
+                                        <li *ngFor="#contact of contactGroup.contacts">
+                                            <a (click)="DispatchToContact(message, contact)" *ngIf="contact.leader">Forward to {{contact.name}}</a>
+                                        </li>
+                                    </template>
+                                </ul>
+                            </span>
+                            {{message.text}}
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                    </div>
+                </div>
+                
+            </div>
         </div>
     `,
     styles: [`
         .bubble {
-            padding: 10px;
+            padding: 5px;
             border-radius: 10px;
-        }
-        .message {
-            padding: 10px;
         }
     `],
     inputs: ['message', 'selected']
