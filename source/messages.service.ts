@@ -100,7 +100,7 @@ export class MessagesService {
         return Observable.throw(errorMessage);
     }
     
-    public sendMessage(message: SMSMessage): Observable<SMSMessage> {
+    public sendMessage(message: SMSMessage): Observable<any> {
         let body = JSON.stringify({
             message: {
                 to: message.to,
@@ -122,7 +122,7 @@ export class MessagesService {
                  .catch(this.handleSendMessageError);
     }
     
-    public sendMessages(message: SMSMessage, recipients: string[]): Observable<SMSMessage> {
+    public sendMessages(message: SMSMessage, recipients: string[]): Observable<any> {
         try {
             recipients = recipients.map((recipient) => {
                 // fix up and check the recipients.

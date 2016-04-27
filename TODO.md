@@ -32,7 +32,8 @@ Sometimes when I log in, the contacts fail to synchronize.  Possibly because I w
 
 ## Messages
 
-* Send a message to a group (maybe a popup by the phone field?)
+* Send a message to a contact or group (maybe a popup by the phone field?)
+* Display a date for each message
 * Reply to a message
 * Add "Forward To..." feature?
 * Add contact for message
