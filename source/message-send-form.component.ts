@@ -2,7 +2,6 @@ import {Component, OnInit, Input, Output, EventEmitter} from 'angular2/core';
 import {NgForm, ControlGroup, FormBuilder, Validators, FORM_DIRECTIVES} from 'angular2/common';
 import {SMSMessage} from './message';
 import {MessagesService} from './messages.service';
-import {Contact} from './contact';
 
 // Using an ngFormModel form seems to be a lot faster than the [()] (two way binding) type of
 // form.  I couldn't figure out how to reset the values on a (ngModelChange) (one way binding)
@@ -13,6 +12,10 @@ import {Contact} from './contact';
     template: `
     <div class="panel">
         <form [ngFormModel]="form" (ngSubmit)="onSubmit()">
+            <div class="form-group" *ngIf="fixedGroupLabel">
+                <label>To</label>
+                {{fixedGroupLabel}}
+            </div>
             <div class="form-group" *ngIf="!fixedRecipient">
                 <label for="to">To</label>
                 <input type="text" class="form-control" ngControl="to" placeholder="To">
@@ -36,7 +39,11 @@ export class MessageSendFormComponent implements OnInit {
     form: ControlGroup;
     
     @Input()
-    public fixedRecipient: Contact;
+    public fixedRecipient: string;
+    
+    // if fixedGroupLabel is set, then fixedrecipient is a comma separated list of recipients in this group.
+    @Input()
+    public fixedGroupLabel: string;
     
     @Output()
     public done = new EventEmitter();
@@ -48,12 +55,13 @@ export class MessageSendFormComponent implements OnInit {
     onSubmit() {
         console.log(this.form.value);
         
-        let recipients: string[];
+        let recipientString: string;
         if (this.fixedRecipient) {
-            recipients = [this.fixedRecipient.phone];        
+            recipientString = this.fixedRecipient;        
         } else {
-            recipients = this.form.value.to.split(',');
+            recipientString = this.form.value.to;
         }
+        let recipients: string[] = recipientString.split(',');
         
         let message: SMSMessage = {
             id: '',
@@ -62,6 +70,7 @@ export class MessageSendFormComponent implements OnInit {
             to: '',
             from: '',
             outgoing: true,
+            contact: null
         };
         
         this._messagesService.sendMessages(message, recipients).subscribe(

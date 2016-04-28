@@ -18,8 +18,12 @@ export class ContactsService {
     private contactGroups: ContactGroup[];
     private contactsDataset: any;
     
-    public getContacts(): Promise<Contact[]> {
-        return Promise.resolve(this.contacts);
+    public getContacts(): Contact[] {
+        return this.contacts;
+    }
+    
+    public stripPhoneNumber(phoneNumber: string): string {
+        return phoneNumber.replace(/[^0-9]+/g, '');
     }
     
     private buildContactGroups() {
@@ -57,13 +61,21 @@ export class ContactsService {
         return this.contactGroups;
     }
     
+    public getContactGroup(groupName: string): ContactGroup {
+        for (var i=0; i < this.contactGroups.length; i++) {
+            if (this.contactGroups[i].name === groupName) {
+                return this.contactGroups[i];
+            }
+        }
+    }
+    
     public loadContacts(): Promise<void> {
         let self = this;
         
         return new Promise<void>((resolve,reject) => {
             self._awsService.openOrCreateDataset('Contacts').then((dataset:any) => {
                 self.contactsDataset = dataset;
-                console.log('promised contacts dataset: ' + dataset);
+                // console.log('promised contacts dataset: ' + dataset);
                 return self._awsService.syncDataset(self.contactsDataset);
             }).then(() => {
                 self.contactsDataset.getAllRecords((error,records) => {
@@ -72,7 +84,7 @@ export class ContactsService {
                         reject(error);
                     }
                     else {
-                        console.log('records: ' + records);
+                        // console.log('records: ' + records);
                         
                         self.contacts.length = 0;
                         
@@ -137,6 +149,33 @@ export class ContactsService {
     }
     
     constructor(private _awsService: AWSService) {
-
+    }
+    
+    private comparePhonesApprox(phoneA: string, phoneB: string): boolean {
+        let compareA = this.stripPhoneNumber(phoneA);
+        let compareB = this.stripPhoneNumber(phoneB);
+        
+        // make sure compareA is the longest string.
+        if (compareB.length > compareA.length) {
+            let swap = compareA;
+            compareA = compareB;
+            compareB = swap;
+        }
+        
+        // special case: if the longest string starts with 1 and is one character longer,
+        // remove the 1.
+        if ((compareA.length === compareB.length + 1) && compareA[0] === '1') {
+            compareA = compareA.slice(1);
+        }
+        
+        return compareA === compareB;
+    }
+    
+    public getContactByPhoneApprox(phone: string): Contact {
+        for (var i=0; i < this.contacts.length; i++) {
+            if (this.comparePhonesApprox(this.contacts[i].phone, phone)) {
+                return this.contacts[i];
+            }
+        }
     }
 }

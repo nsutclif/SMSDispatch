@@ -3,7 +3,7 @@ import {Http, Response, Headers, RequestOptions} from 'angular2/http';
 import {Observable} from 'rxjs/Observable';
 import {Observer} from 'rxjs/Observer';
 import {SMSMessage} from './message';
-import {ConfigService} from './config.service';
+import {ContactsService} from './contacts.service';
 
 // HTTP polling example:
 // http://chariotsolutions.com/blog/post/angular2-observables-http-separating-services-components/
@@ -27,18 +27,14 @@ export class MessagesService {
         messages: SMSMessage[];
     }
     
-    constructor (private _http: Http) {
+    constructor (private _http: Http, private _contactsService: ContactsService) {
         this._dataStore = {messages: []};
         this.messages$ = new Observable((observer)=> {
             this._messagesObserver = observer;
         }).share();
     }
     
-    stripPhoneNumber(phoneNumber: string): string {
-        return phoneNumber.replace(/[^0-9]+/g, '');
-    }
-    
-    loadAll() {
+    public loadAll() {
         // TODO: Use hypermedia style of pagination on the server side.
         let requestURL = MESSAGES_URL + '?Skip=' + this._dataStore.messages.length + '&Limit=' + MESSAGES_PER_CALL;
         let subscription = this._http.get(requestURL)
@@ -50,14 +46,15 @@ export class MessagesService {
               }
 
               dtoMessages.map(dtoMessage => {
-                  console.log(JSON.stringify(dtoMessage));
+                //   console.log(JSON.stringify(dtoMessage));
                   this._dataStore.messages.unshift({
                       id: dtoMessage.id,
                       text: dtoMessage.body,
-                      date: dtoMessage.date_created,
+                      date: new Date(dtoMessage.messagesortkey), // Currently the messagesortkey is the date...
                       to: dtoMessage.to,
                       from: dtoMessage.from,
-                      outgoing: dtoMessage.direction === 'outbound-api'
+                      outgoing: dtoMessage.direction === 'outbound-api',
+                      contact: null
                   });
               });
               
@@ -126,7 +123,7 @@ export class MessagesService {
         try {
             recipients = recipients.map((recipient) => {
                 // fix up and check the recipients.
-                let numbersOnly = this.stripPhoneNumber(recipient);
+                let numbersOnly = this._contactsService.stripPhoneNumber(recipient);
                 
                 if (numbersOnly.length < 10) {
                     throw new Error('Recipient ' + recipient + ' needs to have at least 10 digits');

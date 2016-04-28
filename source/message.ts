@@ -1,3 +1,5 @@
+import {Contact} from './contact';
+
 export interface SMSMessage {
     id: string;
     text: string;
@@ -5,4 +7,5 @@ export interface SMSMessage {
     to: string;
     from: string;
     outgoing: boolean;
+    contact: Contact;
 }

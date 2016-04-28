@@ -1,5 +1,5 @@
 import {Component, OnInit} from 'angular2/core';
-import {Contact} from './contact';
+import {Contact, ContactGroup} from './contact';
 import {ContactsService} from './contacts.service';
 import {ContactFormComponent} from './contact-form.component';
 import {MessageSendFormComponent} from './message-send-form.component';
@@ -22,7 +22,8 @@ import {MessageSendFormComponent} from './message-send-form.component';
                 <div class="dropdown">
                     <span class="glyphicon glyphicon-option-vertical dropdown-toggle" id="contactActionsDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"></span>
                     <ul class="dropdown-menu" aria-labelledby="contactActionsDropdown">
-                    <li><a (click)="sendMessageToContact(contact)">Send Message to Contact</a></li>
+                    <li><a (click)="sendMessageToContact(contact)">Send Message to {{contact.name}}</a></li>
+                    <li><a (click)="sendMessageToContactGroup(contact)">Send Message to {{contact.group}}</a></li>
                     <li><a (click)="deleteContact(contact)">Delete</a></li>
                     </ul>
                 </div>
@@ -35,7 +36,7 @@ import {MessageSendFormComponent} from './message-send-form.component';
             <tr *ngIf="contact===messageRecipient">
               <td></td>
               <td colspan=4>
-                <message-send-form [fixedRecipient]="contact" (done)="doneSendingMessageToContact()"></message-send-form>
+                <message-send-form [fixedRecipient]="messageRecipientPhone" [fixedGroupLabel]="messageRecipientLabel" (done)="doneSendingMessageToContact()"></message-send-form>
               </td>
             </tr>
           </template>
@@ -46,6 +47,8 @@ import {MessageSendFormComponent} from './message-send-form.component';
 export class ContactListComponent implements OnInit {
     public contacts: Contact[];
     private messageRecipient: Contact;
+    private messageRecipientPhone: string;
+    private messageRecipientLabel: string;
     
     constructor(private _contactsService: ContactsService) {        
     }
@@ -55,9 +58,7 @@ export class ContactListComponent implements OnInit {
     }
     
     getContacts() {
-        this._contactsService.getContacts().then(contacts => {
-            this.contacts = contacts;
-        });
+        this.contacts = this._contactsService.getContacts(); 
     }
     
     private deleteContact(contact: Contact) {
@@ -68,10 +69,27 @@ export class ContactListComponent implements OnInit {
     
     private sendMessageToContact(contact: Contact) {
         this.messageRecipient = contact;
+        this.messageRecipientPhone = contact.phone;
+        this.messageRecipientLabel = '';
+    }
+    
+    private sendMessageToContactGroup(contact: Contact) {
+        let contactGroup: ContactGroup = this._contactsService.getContactGroup(contact.group);
+        if (!contactGroup) {
+            throw new Error('Contact group not found: ' + contactGroup);
+        }
+        this.messageRecipient = contact; // this keeps track of where to show the form
+        let groupPhones: string[] = contactGroup.contacts.map((contact) => {
+            return contact.phone
+        })
+        this.messageRecipientPhone = groupPhones.join(',');
+        this.messageRecipientLabel = contact.group;
     }
     
     private doneSendingMessageToContact() {
         this.messageRecipient = null;
+        this.messageRecipientPhone = '';
+        this.messageRecipientLabel = '';
     }
     
     // onSelect(message: SMSMessage) {

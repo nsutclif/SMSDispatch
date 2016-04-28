@@ -26,13 +26,13 @@ export class ConfigService {
                         reject(error);
                     }
                     else {
-                        console.log('records: ' + records);
+                        // console.log('records: ' + records);
                                                 
                         records.map((record)=> {
                             self.config[record.key] = record.value;
                         });
                         
-                        console.log(self.config);
+                        // console.log(self.config);
                                                     
                         resolve();
                     }

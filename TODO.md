@@ -23,6 +23,7 @@ What about duplicate phone numbers?
 
 The first time I add a contact, I get a weird "synchronize failed" error but it seems to synchronize after I add the second contact.
 Sometimes when I log in, the contacts fail to synchronize.  Possibly because I was doing a slow upload?  It doesn't seem to retry.
+Groups don't show up in the Messages form until after you go to the Contacts form.
 
 # Performance
 
@@ -32,11 +33,10 @@ Sometimes when I log in, the contacts fail to synchronize.  Possibly because I w
 
 ## Messages
 
-* Send a message to a contact or group (maybe a popup by the phone field?)
-* Display a date for each message
-* Reply to a message
-* Add "Forward To..." feature?
-* Add contact for message
+* Send a message to a group in response to incoming message (??)
+* Add contacts to groups based on an incoming message
+* Find a way to hide the send single message feature.
+* Add "Forward To..." feature? (??)
 
 ## Dispatching (waiting for server side changes)
 

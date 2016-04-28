@@ -3,6 +3,7 @@ import {SMSMessage} from './message';
 import {MessagesService} from './messages.service';
 import {Contact, ContactGroup} from './contact'; 
 import {ContactsService} from './contacts.service';
+import {MessageSendFormComponent} from './message-send-form.component';
 
 @Component({
     selector: 'sms-message',
@@ -13,17 +14,20 @@ import {ContactsService} from './contacts.service';
                     <div class="col-md-2">
                     </div>
                     <div class="col-md-10">
-                        <div>To: {{message.to}}</div>
+                        <div>To: {{getToDisplayText()}} at {{getDateDisplayText()}}</div>
                         <div class="panel panel-default bubble">{{message.text}}</div>
                     </div>
                 </div>
                 <div class="row" *ngIf="!message.outgoing">
                     <div class="col-md-10">
-                        <div>{{message.from}}:</div>
+                        <div>{{getFromDisplayText()}} at {{getDateDisplayText()}}:</div>
                         <div class="panel panel-default bubble">
                             <span class="dropdown">
                                 <span class="glyphicon glyphicon-option-vertical dropdown-toggle" id="contactActionsDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"></span>
                                 <ul class="dropdown-menu" aria-labelledby="contactActionsDropdown">
+                                    <li>
+                                        <a (click)="replying=true">Reply</a>
+                                    </li>
                                     <template ngFor #contactGroup [ngForOf]="contactGroups" #groupIndex="index">
                                         <li>
                                             <a (click)="dispatchToContactGroup(message, contactGroup)">Forward to {{contactGroup.name}}</a>
@@ -35,6 +39,7 @@ import {ContactsService} from './contacts.service';
                                 </ul>
                             </span>
                             {{message.text}}
+                            <message-send-form [fixedRecipient]="message.from" *ngIf="replying" (done)="replying=false"></message-send-form>
                         </div>
                     </div>
                     <div class="col-md-2">
@@ -44,6 +49,7 @@ import {ContactsService} from './contacts.service';
             </div>
         </div>
     `,
+    directives: [MessageSendFormComponent],
     styles: [`
         .bubble {
             padding: 5px;
@@ -58,6 +64,8 @@ export class SMSMessageComponent implements OnInit {
     public contacts: Contact[];
     public contactGroups: ContactGroup[];
     
+    private replying: boolean = false;
+    
     constructor(private _contactsService: ContactsService, private _messagesService: MessagesService) {        
     }
     
@@ -66,10 +74,8 @@ export class SMSMessageComponent implements OnInit {
     }
     
     getContacts() {
-        this._contactsService.getContacts().then((contacts) => {
-            this.contacts = contacts;
-            this.contactGroups = this._contactsService.getContactGroups();
-        });
+        this.contacts = this._contactsService.getContacts();
+        this.contactGroups = this._contactsService.getContactGroups();
     }
     
     private getClonedMessageForDispatch(original: SMSMessage): SMSMessage {
@@ -94,5 +100,39 @@ export class SMSMessageComponent implements OnInit {
             return contact.phone;
         });
         this._messagesService.sendMessages(messageClone, recipients).subscribe();
+    }
+    
+    private getToDisplayText(): string {
+        if (this.message.contact && this.message.contact.name) {
+            return this.message.contact.name
+        } else {
+            return this.message.to;
+        }
+    }
+    
+    private getFromDisplayText(): string {
+        if (this.message.contact && this.message.contact.name) {
+            return this.message.contact.name
+        } else {
+            return this.message.from;
+        }
+    }
+    
+    private getDateDisplayText(): string {
+        let nowDate: Date = new Date();
+        
+        if (!this.message.date || isNaN(this.message.date.getTime())) {
+            return '';
+        }
+        
+        let sameDates = ((nowDate.getFullYear() === this.message.date.getFullYear()) && 
+          (nowDate.getMonth() === this.message.date.getMonth()) && 
+          (nowDate.getDate() === this.message.date.getDate()));
+          
+        if (sameDates) {
+            return this.message.date.toLocaleTimeString();
+        } else {
+            return this.message.date.toLocaleString();
+        }
     }
 }
