@@ -31,6 +31,10 @@ Groups don't show up in the Messages form until after you go to the Contacts for
 
 # Features
 
+## Testing
+
+* Test on other computers/devices
+
 ## Messages
 
 * Send a message to a group in response to incoming message (??)
