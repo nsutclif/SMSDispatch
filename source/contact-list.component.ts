@@ -23,7 +23,7 @@ import {MessageSendFormComponent} from './message-send-form.component';
                     <span class="glyphicon glyphicon-option-vertical dropdown-toggle" id="contactActionsDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"></span>
                     <ul class="dropdown-menu" aria-labelledby="contactActionsDropdown">
                     <li><a (click)="sendMessageToContact(contact)">Send Message to {{contact.name}}</a></li>
-                    <li><a (click)="sendMessageToContactGroup(contact)">Send Message to {{contact.group}}</a></li>
+                    <li><a (click)="sendMessageToContactGroup(contact)">Send Message to {{contact.group}} Group</a></li>
                     <li><a (click)="deleteContact(contact)">Delete</a></li>
                     </ul>
                 </div>

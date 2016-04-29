@@ -31,7 +31,8 @@ import {MessagesService} from './messages.service';
         </form>
     </div>
     `,
-    directives: [FORM_DIRECTIVES]
+    directives: [FORM_DIRECTIVES],
+    inputs: ['fixedRecipient', 'fixedGroupLabel']
 })
 export class MessageSendFormComponent implements OnInit {
     lastError: string = '';

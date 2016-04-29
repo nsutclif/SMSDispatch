@@ -4,6 +4,7 @@ import {MessagesService} from './messages.service';
 import {Contact, ContactGroup} from './contact'; 
 import {ContactsService} from './contacts.service';
 import {MessageSendFormComponent} from './message-send-form.component';
+import {ContactFormComponent} from './contact-form.component';
 
 @Component({
     selector: 'sms-message',
@@ -28,6 +29,9 @@ import {MessageSendFormComponent} from './message-send-form.component';
                                     <li>
                                         <a (click)="replying=true">Reply</a>
                                     </li>
+                                    <li>
+                                        <a (click)="addingContact=true">Add Contact</a>
+                                    </li>
                                     <template ngFor #contactGroup [ngForOf]="contactGroups" #groupIndex="index">
                                         <li>
                                             <a (click)="dispatchToContactGroup(message, contactGroup)">Forward to {{contactGroup.name}}</a>
@@ -40,6 +44,7 @@ import {MessageSendFormComponent} from './message-send-form.component';
                             </span>
                             {{message.text}}
                             <message-send-form [fixedRecipient]="message.from" *ngIf="replying" (done)="replying=false"></message-send-form>
+                            <contact-form [fixedPhoneNumber]="message.from" [possibleName]="possibleName" [possibleGroup]="possibleGroup" (done)="addingContact=false" *ngIf="addingContact"></contact-form>
                         </div>
                     </div>
                     <div class="col-md-2">
@@ -49,23 +54,35 @@ import {MessageSendFormComponent} from './message-send-form.component';
             </div>
         </div>
     `,
-    directives: [MessageSendFormComponent],
+    directives: [MessageSendFormComponent, ContactFormComponent],
     styles: [`
         .bubble {
             padding: 5px;
             border-radius: 10px;
         }
     `],
-    inputs: ['message', 'selected']
+    inputs: ['message']
 })
 export class SMSMessageComponent implements OnInit {
-    public message: SMSMessage;
-    public selected: boolean;
-    public contacts: Contact[];
-    public contactGroups: ContactGroup[];
+    private _message: SMSMessage;
+    
+    get message(): SMSMessage {
+        return this._message;
+    }    
+    set message(newMessage: SMSMessage) {
+        this._message = newMessage;
+        this.extractContactDetails();
+    }
+    
+    private contacts: Contact[];
+    private contactGroups: ContactGroup[];
     
     private replying: boolean = false;
+    private addingContact: boolean = false;
     
+    private possibleGroup: string;
+    private possibleName: string;
+
     constructor(private _contactsService: ContactsService, private _messagesService: MessagesService) {        
     }
     
@@ -134,5 +151,48 @@ export class SMSMessageComponent implements OnInit {
         } else {
             return this.message.date.toLocaleString();
         }
+    }
+    
+    private extractContactDetails() {
+    // private possibleGroup: string;
+    // private possibleName: string;
+        this.possibleGroup = '';
+        this.possibleName = '';
+        
+        let messageText = this.message.text;
+        
+        let lowerCaseText = messageText.toLowerCase();
+        
+        let joinPos = lowerCaseText.indexOf('join');
+        
+        if (joinPos !==-1) {
+            let namePos = lowerCaseText.indexOf('name');
+            
+            let possibleName = '';
+            if (namePos > joinPos) {
+                possibleName = messageText.slice(namePos + 4);
+                
+                messageText = messageText.slice(0, namePos);
+            }
+            let possibleGroup = messageText.slice(joinPos + 4);
+            
+            function stripDelimiters (inputString: string): string {
+                // Extract any words.  Leave behind things like colons and spaces.
+                let regexResult: string[] = /\w+(\s+\w+)*/.exec(inputString);
+                
+                if (Array.isArray(regexResult)) {
+                    return regexResult[0];
+                } else {
+                    console.log('stripDelimiters regex not found');
+                    return inputString;
+                };
+            };
+                        
+            possibleGroup = stripDelimiters(possibleGroup);
+            possibleName = stripDelimiters(possibleName);            
+            
+            this.possibleGroup = possibleGroup;
+            this.possibleName = possibleName;
+        }  
     }
 }

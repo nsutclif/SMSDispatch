@@ -34,20 +34,18 @@ Groups don't show up in the Messages form until after you go to the Contacts for
 ## Messages
 
 * Send a message to a group in response to incoming message (??)
-* Add contacts to groups based on an incoming message
-* Find a way to hide the send single message feature.
+* Find a way to hide/collapse the send single message feature.
 * Add "Forward To..." feature? (??)
 
 ## Dispatching (waiting for server side changes)
 
-* Display contact/group names in message list
+* Display group names in message list
 * Include original sender's name when forwarding a message
-* Progress/success/error indicator for dispatch feature?
 
 ## Contact Management
 
 * Name column before phone column in contacts grid
-* Edit Contacts
+* Edit Contacts (example: make someone a leader)
 * Search and sort
 * Import/export contacts
 
@@ -73,6 +71,16 @@ http://martinfowler.com/articles/web-security-basics.
 
 * replace JSON.parse(JSON.stringify) with Assign.
 * My use of promises is a mess
+
+
+import {bootstrap} from 'angular2/platform/browser';
+import {App} from './app';
+import {enableProdMode} from 'angular2/core';
+
+enableProdMode();
+
+bootstrap(App, [])
+  .catch(err => console.error(err));
 
 # Links
 

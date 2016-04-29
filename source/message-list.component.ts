@@ -15,8 +15,7 @@ import {ContactsService} from './contacts.service';
         <div *ngFor="#message of messages">
             <sms-message 
                 (click)="onSelect(message)"
-                [message]="message" 
-                [selected]="message === selectedMessage">
+                [message]="message">
             </sms-message>
         </div>
     `,
