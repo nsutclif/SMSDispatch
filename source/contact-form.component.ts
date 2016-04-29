@@ -27,7 +27,7 @@ import {ContactsService} from './contacts.service';
       </form>
     `,
     directives: [FORM_DIRECTIVES],
-    inputs: ['fixedPhoneNumber','possibleName','possibleGroup'];
+    inputs: ['fixedPhoneNumber','possibleName','possibleGroup']
 })
 export class ContactFormComponent implements OnInit {
     form: ControlGroup;
