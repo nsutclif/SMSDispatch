@@ -188,7 +188,7 @@ export class SMSMessageComponent implements OnInit {
             let possibleGroup = messageText.slice(joinPos + 4);
             
             possibleGroup = this.stripDelimiters(possibleGroup);
-            possibleName = this.stripDelimiters(possibleName);            
+            possibleName = this.stripDelimiters(possibleName);
             
             this.possibleGroup = possibleGroup;
             this.possibleName = possibleName;

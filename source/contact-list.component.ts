@@ -11,9 +11,9 @@ import {MessageSendFormComponent} from './message-send-form.component';
         <table class="table table-compact">
           <tr>
             <th></th>
-            <th>Phone</th>
             <th>Name</th>
             <th>Group</th>
+            <th>Phone</th>
             <th></th>
           </tr>
           <template ngFor #contact [ngForOf]="contacts">
@@ -28,9 +28,9 @@ import {MessageSendFormComponent} from './message-send-form.component';
                     </ul>
                 </div>
                 </td>
-                <td>{{contact.phone}}</td>
                 <td>{{contact.name}}</td>
                 <td>{{contact.group}}</td>
+                <td>{{contact.phone}}</td>
                 <td><span *ngIf="contact.leader">Leader</span></td>
             </tr>
             <tr *ngIf="contact===messageRecipient">

@@ -58,7 +58,6 @@ bootstrap(App, [])
 
 ## Contact Management
 
-* Name column before phone column in contacts grid
 * Edit Contacts (example: make someone a leader)
 * Search and sort
 * Import/export contacts
