@@ -178,6 +178,7 @@ export class SMSMessageComponent implements OnInit {
             
             function stripDelimiters (inputString: string): string {
                 // Extract any words.  Leave behind things like colons and spaces.
+                // https://regex101.com/#javascript
                 let regexResult: string[] = /\w+(\s+\w+)*/.exec(inputString);
                 
                 if (Array.isArray(regexResult)) {
