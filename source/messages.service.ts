@@ -41,7 +41,7 @@ export class MessagesService {
           .subscribe((response: Response) => {
               let dtoMessages: any[] = response.json();
               if (!Array.isArray(dtoMessages)) {
-                  console.log('response.json is not an array: ' + response.json());
+                  console.log('response.json is not an array: ' + JSON.stringify(response.json()));
                   dtoMessages = [];
               }
 

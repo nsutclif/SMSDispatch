@@ -71,7 +71,7 @@ export class SMSMessageComponent implements OnInit {
     }    
     set message(newMessage: SMSMessage) {
         this._message = newMessage;
-        this.extractContactDetails();
+        //this.extractContactDetails();
     }
     
     private contacts: Contact[];
@@ -153,9 +153,20 @@ export class SMSMessageComponent implements OnInit {
         }
     }
     
+    private stripDelimiters (inputString: string): string {
+        // Extract any words.  Leave behind things like colons and spaces.
+        // https://regex101.com/#javascript
+        let regexResult: string[] = /\w+(\s+\w+)*/.exec(inputString);
+        
+        if (Array.isArray(regexResult)) {
+            return regexResult[0];
+        } else {
+            console.log('stripDelimiters regex not found');
+            return inputString;
+        };
+    };
+                
     private extractContactDetails() {
-    // private possibleGroup: string;
-    // private possibleName: string;
         this.possibleGroup = '';
         this.possibleName = '';
         
@@ -176,21 +187,8 @@ export class SMSMessageComponent implements OnInit {
             }
             let possibleGroup = messageText.slice(joinPos + 4);
             
-            function stripDelimiters (inputString: string): string {
-                // Extract any words.  Leave behind things like colons and spaces.
-                // https://regex101.com/#javascript
-                let regexResult: string[] = /\w+(\s+\w+)*/.exec(inputString);
-                
-                if (Array.isArray(regexResult)) {
-                    return regexResult[0];
-                } else {
-                    console.log('stripDelimiters regex not found');
-                    return inputString;
-                };
-            };
-                        
-            possibleGroup = stripDelimiters(possibleGroup);
-            possibleName = stripDelimiters(possibleName);            
+            possibleGroup = this.stripDelimiters(possibleGroup);
+            possibleName = this.stripDelimiters(possibleName);            
             
             this.possibleGroup = possibleGroup;
             this.possibleName = possibleName;

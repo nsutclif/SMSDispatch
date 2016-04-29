@@ -23,6 +23,7 @@ What about duplicate phone numbers?
 
 The first time I add a contact, I get a weird "synchronize failed" error but it seems to synchronize after I add the second contact.
 Sometimes when I log in, the contacts fail to synchronize.  Possibly because I was doing a slow upload?  It doesn't seem to retry.
+ -> Try logging in after clearing the cache.
 Groups don't show up in the Messages form until after you go to the Contacts form.
 
 # Performance
