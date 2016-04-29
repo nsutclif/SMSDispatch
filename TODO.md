@@ -42,7 +42,7 @@ bootstrap(App, [])
 
 ## Testing
 
-* Test on other computers/devices
+* Test on other computers/devices/browsers
 
 ## Messages
 
