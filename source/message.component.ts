@@ -71,7 +71,7 @@ export class SMSMessageComponent implements OnInit {
     }    
     set message(newMessage: SMSMessage) {
         this._message = newMessage;
-        //this.extractContactDetails();
+        this.extractContactDetails();
     }
     
     private contacts: Contact[];
