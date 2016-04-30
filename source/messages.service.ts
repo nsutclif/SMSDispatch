@@ -29,7 +29,7 @@ export class MessagesService {
     
     constructor (private _http: Http, private _contactsService: ContactsService) {
         this._dataStore = {messages: []};
-        this.messages$ = new Observable((observer)=> {
+        this.messages$ = new Observable<SMSMessage[]>((observer)=> {
             this._messagesObserver = observer;
         }).share();
     }

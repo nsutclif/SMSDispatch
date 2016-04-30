@@ -16,7 +16,7 @@ import {MessageSendFormComponent} from './message-send-form.component';
             <th>Phone</th>
             <th></th>
           </tr>
-          <template ngFor #contact [ngForOf]="contacts">
+          <template ngFor let-contact [ngForOf]="contacts">
             <tr>
                 <td>
                 <div class="dropdown">

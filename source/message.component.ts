@@ -32,11 +32,11 @@ import {ContactFormComponent} from './contact-form.component';
                                     <li>
                                         <a (click)="addingContact=true">Add Contact</a>
                                     </li>
-                                    <template ngFor #contactGroup [ngForOf]="contactGroups" #groupIndex="index">
+                                    <template ngFor let-contactGroup [ngForOf]="contactGroups">
                                         <li>
                                             <a (click)="dispatchToContactGroup(message, contactGroup)">Forward to {{contactGroup.name}}</a>
                                         </li>
-                                        <li *ngFor="#contact of contactGroup.contacts">
+                                        <li *ngFor="let contact of contactGroup.contacts">
                                             <a (click)="dispatchToContact(message, contact)" *ngIf="contact.leader">Forward to {{contact.name}}</a>
                                         </li>
                                     </template>

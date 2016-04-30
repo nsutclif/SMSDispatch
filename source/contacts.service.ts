@@ -84,7 +84,7 @@ export class ContactsService {
                         reject(error);
                     }
                     else {
-                        // console.log('records: ' + records);
+                        console.log('records: ' + records);
                         
                         self.contacts.length = 0;
                         

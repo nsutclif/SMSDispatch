@@ -12,7 +12,7 @@ import {ContactsService} from './contacts.service';
     selector: 'message-list',
     template:`
         <message-send-form></message-send-form>
-        <div *ngFor="#message of messages">
+        <div *ngFor="let message of messages">
             <sms-message 
                 (click)="onSelect(message)"
                 [message]="message">
