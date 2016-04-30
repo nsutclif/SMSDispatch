@@ -17,7 +17,7 @@ export class AWSService {
                 if (response.authResponse) {
                     // http://docs.aws.amazon.com/AWSJavaScriptSDK/guide/browser-configuring.html
                     AWS.config.credentials = new AWS.CognitoIdentityCredentials({
-                        IdentityPoolId: "us-east-1:66b8e8b8-c6a3-4d80-9d9c-e939c814f0b7",
+                        IdentityPoolId: "us-east-1:9a275a9a-9fcd-49ff-a164-057e646e8f92",
                         Logins: {
                             'graph.facebook.com': response.authResponse.accessToken 
                         }
