@@ -52,7 +52,7 @@ export class DebugComponent {
                 group: 'Volunteers',
                 leader: false 
             };
-            //this._contactsService.addContact(newContact);
+            this._contactsService.addContact(newContact);
             console.log(JSON.stringify(newContact));
         });
     }
