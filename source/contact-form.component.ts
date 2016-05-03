@@ -23,7 +23,7 @@ import {ContactsService} from './contacts.service';
         <input type="checkbox" class="form-control" ngControl="leader">
         
         <button type="submit" class="btn btn-default">Add</button>
-        <button type="button" class="btn btn-default" *ngIf="fixedPhoneNumber" (click)="doneAdding(0)">Cancel</button>
+        <button type="button" class="btn btn-default" (click)="doneAdding(0)">Cancel</button>
       </form>
     `,
     directives: [FORM_DIRECTIVES],

@@ -48,7 +48,7 @@ bootstrap(App, [])
 ## Messages
 
 * Send a message to a group in response to incoming message (??)
-* Find a way to hide/collapse the send single message feature.
+* Find a way to hide/collapse the send single message feature. *or just delete*
 * Add "Forward To..." feature? (??)
 
 ## Dispatching (waiting for server side changes)
@@ -58,8 +58,9 @@ bootstrap(App, [])
 
 ## Contact Management
 
+* Improve Contact Loading by using same Observable pattern as Messages <----
 * Edit Contacts (example: make someone a leader)
-* Search and sort
+* sort
 * Import/export contacts
 
 ## Configuration
