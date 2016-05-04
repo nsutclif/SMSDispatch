@@ -44,27 +44,39 @@ bootstrap(App, [])
 ## Testing
 
 * Test on other computers/devices/browsers
+* Load Testing for incoming messages
 
 ## Messages
 
-* Send a message to a group in response to incoming message (??)
+* ** Change body mapping template on outgoing message to handle string or array **
+  or switch to two parameters.
+  
+{
+  "message": {
+    "to" : $input.params('to'),
+    "body": "$input.params('body')",
+    "broadcastlabel": "$input.params('broadcastlabel')"
+  }
+}  
+  
+  
 * Find a way to hide/collapse the send single message feature. *or just delete*
-* Add "Forward To..." feature? (??)
 
 ## Dispatching (waiting for server side changes)
 
-* Display group names in message list
-* Include original sender's name when forwarding a message
+* Display group names in message list (might be done)
+* Include original sender's name when forwarding a message (if we have the name)
 
 ## Contact Management
 
 * Improve Contact Loading by using same Observable pattern as Messages <----
-* Edit Contacts (example: make someone a leader)
-* sort
-* Import/export contacts
+* Either show the leaders first or have a toggle to *show leaders only.*
+* Edit Contacts (example: make someone a leader) or delete the menu item
+* Import/export contacts (nope)
 
 ## Configuration
 
+* Hide the config form for now.
 * Cancel/Reset button on form
 
 # Improve Login
