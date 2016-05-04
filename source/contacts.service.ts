@@ -172,10 +172,12 @@ export class ContactsService {
     }
     
     public getContactByPhoneApprox(phone: string): Contact {
-        for (var i=0; i < this.contacts.length; i++) {
-            if (this.comparePhonesApprox(this.contacts[i].phone, phone)) {
-                return this.contacts[i];
+        if (phone) {
+            for (var i=0; i < this.contacts.length; i++) {
+                if (this.comparePhonesApprox(this.contacts[i].phone, phone)) {
+                    return this.contacts[i];
+                }
             }
-        }
+        }        
     }
 }
