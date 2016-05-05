@@ -1,5 +1,7 @@
 ///<reference path="../typings/browser/ambient/aws-sdk/aws-sdk.d.ts"/>
 import {Injectable} from 'angular2/core';
+import {Observable} from 'rxjs/Observable';
+import {Observer} from 'rxjs/Observer';
 import {Contact, ContactGroup} from './contact';
 import {AWSService} from './aws.service';
 
@@ -13,6 +15,12 @@ declare var AWS: any;
 
 @Injectable()
 export class ContactsService {
+    contacts$: Observable<Contact[]>;
+    private _contactsObserver: Observer<Contact[]>;
+    private _dataStore: {
+        contacts: Contact[];
+        contactGroups: ContactGroup[];
+    }
     
     private contacts: Contact[] = [];
     private contactGroups: ContactGroup[];
@@ -84,7 +92,7 @@ export class ContactsService {
                         reject(error);
                     }
                     else {
-                        // console.log('records: ' + records);
+                        console.log('records: ' + records);
                         
                         self.contacts.length = 0;
                         

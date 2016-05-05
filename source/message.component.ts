@@ -116,7 +116,7 @@ export class SMSMessageComponent implements OnInit {
         let recipients = contactGroup.contacts.map((contact) => {
             return contact.phone;
         });
-        this._messagesService.sendMessages(messageClone, recipients).subscribe();
+        this._messagesService.sendMessages(messageClone, recipients, contactGroup.name).subscribe();
     }
     
     private getToDisplayText(): string {

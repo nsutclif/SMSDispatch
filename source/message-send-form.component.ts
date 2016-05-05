@@ -74,7 +74,7 @@ export class MessageSendFormComponent implements OnInit {
             contact: null
         };
         
-        this._messagesService.sendMessages(message, recipients).subscribe(
+        this._messagesService.sendMessages(message, recipients, this.fixedGroupLabel).subscribe(
             (message) => {
                 this.doneSending(1000);
                 this.success = true;

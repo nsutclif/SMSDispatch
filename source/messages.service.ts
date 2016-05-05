@@ -97,13 +97,7 @@ export class MessagesService {
         return Observable.throw(errorMessage);
     }
     
-    public sendMessage(message: SMSMessage): Observable<any> {
-        let body = JSON.stringify({
-            message: {
-                to: message.to,
-                body: message.text
-            }
-        });
+    public sendMessageDTO(dto: string): Observable<any> {
         let headers = new Headers({
             'Content-Type': 'application/json'
         });
@@ -111,15 +105,26 @@ export class MessagesService {
             headers: headers
         });
         
-        console.log('about to post: ' + body);
+        console.log('about to post: ' + dto);
         console.log('to: ' + OUTGOING_MESSAGES_URL);
         
-        return this._http.post(OUTGOING_MESSAGES_URL, body, options)
+        return this._http.post(OUTGOING_MESSAGES_URL, dto, options)
                  .map(this.extractSendResponse)
                  .catch(this.handleSendMessageError);
     }
     
-    public sendMessages(message: SMSMessage, recipients: string[]): Observable<any> {
+    public sendMessage(message: SMSMessage): Observable<any> {
+        let body = JSON.stringify({
+            message: {
+                to: message.to,
+                body: message.text
+            }
+        });
+        
+        return this.sendMessageDTO(body);
+    }
+    
+    public sendMessages(message: SMSMessage, recipients: string[], groupName: string): Observable<any> {
         try {
             recipients = recipients.map((recipient) => {
                 // fix up and check the recipients.
@@ -132,10 +137,15 @@ export class MessagesService {
                 return recipient;
             });
             
-            return Observable.forkJoin(recipients.map((recipient) => {
-                message.to = recipient;
-                return this.sendMessage(message);
-            }));            
+            let body = JSON.stringify({
+                message: {
+                    to: recipients,
+                    body: message.text,
+                    broadcastlabel: groupName
+                }
+            });
+            
+            return this.sendMessageDTO(body);
         } 
         catch (error) {
             return Observable.throw(error);
