@@ -16,18 +16,39 @@ declare var AWS: any;
 @Injectable()
 export class ContactsService {
     contacts$: Observable<Contact[]>;
+    contactGroups$: Observable<ContactGroup[]>;
     private _contactsObserver: Observer<Contact[]>;
+    private _contactGroupsObserver: Observer<ContactGroup[]>;
     private _dataStore: {
         contacts: Contact[];
         contactGroups: ContactGroup[];
     }
     
-    private contacts: Contact[] = [];
-    private contactGroups: ContactGroup[];
     private contactsDataset: any;
     
-    public getContacts(): Contact[] {
-        return this.contacts;
+    constructor(private _awsService: AWSService) {
+        this._dataStore = {
+            contacts: [], 
+            contactGroups: []
+        };
+        this.contacts$ = new Observable<Contact[]>((observer) => {
+            this._contactsObserver = observer;
+            this.changedDataStore(); // give the observer the current copy.
+        });
+        this.contactGroups$ = new Observable<ContactGroup[]>((observer) => {
+            this._contactGroupsObserver = observer;
+            this.changedDataStore(); // give the observer the current copy.
+        });
+    }
+    
+    private changedDataStore() {
+        this.buildContactGroups();
+        if (this._contactsObserver) {
+            this._contactsObserver.next(this._dataStore.contacts);
+        }
+        if (this._contactGroupsObserver) {
+            this._contactGroupsObserver.next(this._dataStore.contactGroups);
+        }
     }
     
     public stripPhoneNumber(phoneNumber: string): string {
@@ -37,7 +58,7 @@ export class ContactsService {
     private buildContactGroups() {
         let groupMap = new Map();
         
-        this.contacts.map((contact: Contact)=>{
+        this._dataStore.contacts.map((contact: Contact)=>{
             let contactGroup: ContactGroup = <ContactGroup>groupMap.get(contact.group);
             if (!contactGroup) {
                 contactGroup = {name: contact.group, contacts: [contact]};
@@ -48,13 +69,13 @@ export class ContactsService {
             }
         });
         
-        this.contactGroups = [];
+        this._dataStore.contactGroups = [];
         groupMap.forEach((value: ContactGroup)=> {
-            this.contactGroups.push(value);
+            this._dataStore.contactGroups.push(value);
         });
         
         // also sort the contacts:
-        this.contacts.sort((a: Contact, b: Contact): number => {
+        this._dataStore.contacts.sort((a: Contact, b: Contact): number => {
             let result =  a.group.localeCompare(b.group);
             
             if (result === 0) {
@@ -65,55 +86,47 @@ export class ContactsService {
         });
     }
     
-    public getContactGroups(): ContactGroup[] {
-        return this.contactGroups;
-    }
-    
     public getContactGroup(groupName: string): ContactGroup {
-        for (var i=0; i < this.contactGroups.length; i++) {
-            if (this.contactGroups[i].name === groupName) {
-                return this.contactGroups[i];
+        for (var i=0; i < this._dataStore.contactGroups.length; i++) {
+            if (this._dataStore.contactGroups[i].name === groupName) {
+                return this._dataStore.contactGroups[i];
             }
         }
     }
     
-    public loadContacts(): Promise<void> {
+    public loadContacts() {
         let self = this;
         
-        return new Promise<void>((resolve,reject) => {
-            self._awsService.openOrCreateDataset('Contacts').then((dataset:any) => {
-                self.contactsDataset = dataset;
-                // console.log('promised contacts dataset: ' + dataset);
-                return self._awsService.syncDataset(self.contactsDataset);
-            }).then(() => {
-                self.contactsDataset.getAllRecords((error,records) => {
-                    if(error) {
-                        console.log('rejected: ' + error);
-                        reject(error);
-                    }
-                    else {
-                        console.log('records: ' + records);
-                        
-                        self.contacts.length = 0;
-                        
-                        records.map((record)=> {
-                            // Records with blank values are marked for deletion.  
-                            // Supposedly they will eventually go away when they get synced with Amazon...
-                            if (record.value) {
-                                try {
-                                    let loadedContact: Contact = JSON.parse(record.value);
-                                    loadedContact.phone = record.key;
-                                    self.contacts.push(loadedContact);                                
-                                } catch (error) {
-                                    console.log('error loading record: ' + record + ': ' + error);
-                                }
+        self._awsService.openOrCreateDataset('Contacts').then((dataset:any) => {
+            self.contactsDataset = dataset;
+            // console.log('promised contacts dataset: ' + dataset);
+            return self._awsService.syncDataset(self.contactsDataset);
+        }).then(() => {
+            self.contactsDataset.getAllRecords((error,records) => {
+                if(error) {
+                    console.log('error getting records: ' + error);
+                }
+                else {
+                    console.log('records: ' + records);
+                    
+                    self._dataStore.contacts = [];
+                    
+                    records.map((record)=> {
+                        // Records with blank values are marked for deletion.  
+                        // Supposedly they will eventually go away when they get synced with Amazon...
+                        if (record.value) {
+                            try {
+                                let loadedContact: Contact = JSON.parse(record.value);
+                                loadedContact.phone = record.key;
+                                self._dataStore.contacts.push(loadedContact);            
+                            } catch (error) {
+                                console.log('error loading record: ' + record + ': ' + error);
                             }
-                        });
-                        
-                        self.buildContactGroups();                            
-                        resolve();
-                    }
-                })
+                        }
+                    });
+                    
+                    self.changedDataStore();                            
+                }
             })
         })
     }
@@ -134,29 +147,26 @@ export class ContactsService {
                 console.log('record added.');
                 this._awsService.syncDataset(this.contactsDataset);
         
-                this.contacts.push(clonedContact);
-                this.buildContactGroups();
+                this._dataStore.contacts.push(clonedContact);
+                this.changedDataStore();
             }
             
         });
     }
     
     public deleteContact(contact: Contact) {
-        let contactIndex = this.contacts.indexOf(contact);
+        let contactIndex = this._dataStore.contacts.indexOf(contact);
         this.contactsDataset.remove(contact.phone, (err, record)=> {
             if(err) {
                 console.log('Error deleting contact: ' + err);
             }
             else {
                 console.log('record deleted.');
-                this.contacts.splice(contactIndex, 1);
-                this.buildContactGroups();
+                this._dataStore.contacts.splice(contactIndex, 1);
+                this.changedDataStore();
                 this._awsService.syncDataset(this.contactsDataset);
             }
         });
-    }
-    
-    constructor(private _awsService: AWSService) {
     }
     
     private comparePhonesApprox(phoneA: string, phoneB: string): boolean {
@@ -181,9 +191,9 @@ export class ContactsService {
     
     public getContactByPhoneApprox(phone: string): Contact {
         if (phone) {
-            for (var i=0; i < this.contacts.length; i++) {
-                if (this.comparePhonesApprox(this.contacts[i].phone, phone)) {
-                    return this.contacts[i];
+            for (var i=0; i < this._dataStore.contacts.length; i++) {
+                if (this.comparePhonesApprox(this._dataStore.contacts[i].phone, phone)) {
+                    return this._dataStore.contacts[i];
                 }
             }
         }        

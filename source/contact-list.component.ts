@@ -1,4 +1,5 @@
-import {Component, OnInit} from 'angular2/core';
+import {Component, OnInit, OnDestroy} from 'angular2/core';
+import {Subscription} from 'rxjs/Subscription';
 import {Contact, ContactGroup} from './contact';
 import {ContactsService} from './contacts.service';
 import {ContactFormComponent} from './contact-form.component';
@@ -62,9 +63,10 @@ import {MessageSendFormComponent} from './message-send-form.component';
     `,
     directives: [ContactFormComponent, MessageSendFormComponent]
 })
-export class ContactListComponent implements OnInit {
-    public contacts: Contact[];
-    public filteredContacts: Contact[];
+export class ContactListComponent implements OnInit, OnDestroy {
+    private contactsSubscription: Subscription;
+    private contacts: Contact[];
+    private filteredContacts: Contact[];
     private messageRecipient: Contact;
     private messageRecipientPhone: string;
     private messageRecipientLabel: string;
@@ -80,16 +82,21 @@ export class ContactListComponent implements OnInit {
         this.updateFilteredContacts();
     }
     
-    constructor(private _contactsService: ContactsService) {        
+    constructor(private _contactsService: ContactsService) {
     }
     
     ngOnInit() {
-        this.getContacts();
+        console.log('about to subscribe');
+        this.contactsSubscription = this._contactsService.contacts$.subscribe((contacts: Contact[]) => {
+            this.contacts = contacts;
+            this.updateFilteredContacts();
+            console.log('subscribe');
+        });
     }
     
-    getContacts() {
-        this.contacts = this._contactsService.getContacts();
-        this.updateFilteredContacts(); 
+    ngOnDestroy() {
+        this.contactsSubscription.unsubscribe();
+        console.log('unsubscribe');
     }
     
     private editContact(contact: Contact) {
@@ -128,11 +135,12 @@ export class ContactListComponent implements OnInit {
     }
     
     private updateFilteredContacts() {
-        // This code isn't called when the contacts service finishes synchronizing the contacts (I think)
-        //     Possible workaround: Set this.filteredContacts = this.contacts if !searchText?
-        
         // If we need to debounce:
         // http://stackoverflow.com/questions/32051273/angular2-and-debounce
+
+        if (!this.contacts) {
+            return;
+        }
         
         let lowerSearchText = this.searchText.toLowerCase();
         

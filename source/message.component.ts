@@ -1,4 +1,5 @@
-import {Component, OnInit} from 'angular2/core';
+import {Component, OnInit, OnDestroy} from 'angular2/core';
+import {Subscription} from 'rxjs/Subscription';
 import {SMSMessage} from './message';
 import {MessagesService} from './messages.service';
 import {Contact, ContactGroup} from './contact'; 
@@ -63,7 +64,7 @@ import {ContactFormComponent} from './contact-form.component';
     `],
     inputs: ['message']
 })
-export class SMSMessageComponent implements OnInit {
+export class SMSMessageComponent implements OnInit, OnDestroy {
     private _message: SMSMessage;
     
     get message(): SMSMessage {
@@ -74,8 +75,9 @@ export class SMSMessageComponent implements OnInit {
         this.extractContactDetails();
     }
     
-    private contacts: Contact[];
     private contactGroups: ContactGroup[];
+    
+    private contactGroupsSubscription: Subscription;
     
     private replying: boolean = false;
     private addingContact: boolean = false;
@@ -83,16 +85,18 @@ export class SMSMessageComponent implements OnInit {
     private possibleGroup: string;
     private possibleName: string;
 
-    constructor(private _contactsService: ContactsService, private _messagesService: MessagesService) {        
+    constructor(private _contactsService: ContactsService, private _messagesService: MessagesService) {
+        this.contactGroupsSubscription = _contactsService.contactGroups$.subscribe((contactGroups: ContactGroup[]) => {
+            this.contactGroups = contactGroups;
+        });
     }
     
     ngOnInit() {
-        this.getContacts();
     }
     
-    getContacts() {
-        this.contacts = this._contactsService.getContacts();
-        this.contactGroups = this._contactsService.getContactGroups();
+    ngOnDestroy() {
+        // prevent memory leak when component destroyed:
+        this.contactGroupsSubscription.unsubscribe();
     }
     
     private getClonedMessageForDispatch(original: SMSMessage): SMSMessage {
