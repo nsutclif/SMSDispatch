@@ -48,18 +48,6 @@ bootstrap(App, [])
 
 ## Messages
 
-* ** Change body mapping template on outgoing message to handle string or array **
-  or switch to two parameters.
-  
-{
-  "message": {
-    "to" : $input.params('to'),
-    "body": "$input.params('body')",
-    "broadcastlabel": "$input.params('broadcastlabel')"
-  }
-}  
-  
-  
 * Find a way to hide/collapse the send single message feature. *or just delete*
 
 ## Dispatching (waiting for server side changes)
@@ -69,7 +57,6 @@ bootstrap(App, [])
 
 ## Contact Management
 
-* Improve Contact Loading by using same Observable pattern as Messages <----
 * Either show the leaders first or have a toggle to *show leaders only.*
 * Edit Contacts (example: make someone a leader) or delete the menu item
 * Import/export contacts (nope)
