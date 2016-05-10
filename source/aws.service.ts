@@ -54,24 +54,28 @@ export class AWSService {
                     reject(err);
                 }
                 else {
+                    dataset.logger = (error) => {console.log(error)};
                     resolve(dataset);
                 }
             });
         });
     }
     
-    public syncDataset(dataset: any): Promise<void> {        
+    public syncDataset(dataset: any): Promise<void> {
+        console.log('syncDataset');
         return new Promise<void>((resolve,reject) => {
             dataset.synchronize(
                 {
                     onSuccess: (dataset, updates) => {
-                        console.log('synchronized.'); 
                         resolve();
+                        console.log('onSuccess.'); 
                     },
                     onFailure: (err) => {
+                        console.log('onFailure: ' + err);
                         reject(err);
                     },
                     onConflict: (dataset, conflicts, callback) => {
+                        console.log('onConflict');
                         let resolved = [];
                         conflicts.map((conflict) => {
                             // For now, just go with remote record.
@@ -82,8 +86,7 @@ export class AWSService {
                             return callback(true);
                         });
                     }
-                }, 
-                false);
+                });
         });
     }
 }

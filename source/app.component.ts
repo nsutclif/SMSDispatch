@@ -73,7 +73,7 @@ export class AppComponent {
         // TODO: FIX THIS MESS.
         this._awsService.signIn().then( ()=>{ 
             this._contactsService.loadContacts();
-            this._configService.loadConfig();
+            // this._configService.loadConfig();
         });
     }
 }

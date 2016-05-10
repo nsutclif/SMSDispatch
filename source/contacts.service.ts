@@ -107,7 +107,7 @@ export class ContactsService {
                     console.log('error getting records: ' + error);
                 }
                 else {
-                    console.log('records: ' + records);
+                    // console.log('records: ' + records);
                     
                     self._dataStore.contacts = [];
                     
