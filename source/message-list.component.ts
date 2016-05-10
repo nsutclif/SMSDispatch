@@ -4,14 +4,12 @@ import {Subscription} from 'rxjs/Subscription';
 import {SMSMessage} from './message';
 import {SMSMessageComponent} from './message.component';
 import {MessagesService} from './messages.service';
-import {MessageSendFormComponent} from './message-send-form.component';
 import {Contact} from './contact';
 import {ContactsService} from './contacts.service';
 
 @Component({
     selector: 'message-list',
     template:`
-        <message-send-form></message-send-form>
         <div *ngFor="let message of messages">
             <sms-message 
                 (click)="onSelect(message)"
@@ -19,7 +17,7 @@ import {ContactsService} from './contacts.service';
             </sms-message>
         </div>
     `,
-    directives: [SMSMessageComponent, MessageSendFormComponent]
+    directives: [SMSMessageComponent]
 })
 export class MessageListComponent implements OnInit, OnDestroy {
     public messages: SMSMessage[];

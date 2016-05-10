@@ -1,5 +1,6 @@
 import {Component, OnInit, Input, Output, EventEmitter} from 'angular2/core';
 import {NgForm, ControlGroup, FormBuilder, Validators, FORM_DIRECTIVES} from 'angular2/common';
+import {Observable} from 'rxjs/Observable';;
 import {SMSMessage} from './message';
 import {MessagesService} from './messages.service';
 
@@ -74,7 +75,15 @@ export class MessageSendFormComponent implements OnInit {
             contact: null
         };
         
-        this._messagesService.sendMessages(message, recipients, this.fixedGroupLabel).subscribe(
+        let messageObservable: Observable<any>;
+        if (recipients.length === 1) {
+            message.to = recipients[0];
+            messageObservable = this._messagesService.sendMessage(message);
+        } else {
+            messageObservable = this._messagesService.sendMessages(message, recipients, this.fixedGroupLabel);
+        }
+        
+        messageObservable.subscribe(
             (message) => {
                 this.doneSending(1000);
                 this.success = true;

@@ -1,7 +1,5 @@
 # Project
 
-* Move the Cognito Pool out of my personal account.
-
 # Testing
 
 * Come up with a set of representative tests
@@ -24,22 +22,22 @@ What about duplicate phone numbers?
 The first time I add a contact, I get a weird "synchronize failed" error but it seems to synchronize after I add the second contact.
 Sometimes when I log in, the contacts fail to synchronize.  Possibly because I was doing a slow upload?  It doesn't seem to retry.
  -> Try logging in after clearing the cache.
-Groups don't show up in the Messages form until after you go to the Contacts form.
 
 # Performance
 
-* Need to at least prevent client from requesting map files.
+* Need to at least prevent client from requesting map files. (maybe they're not if developer tools aren't displayed?)
 
 # Features
 
 ## Testing
 
 * Test on other computers/devices/browsers
-* Load Testing for incoming messages
+* Load Testing for incoming 
+* Test with and without "prod mode" (boot.ts)
 
 ## Messages
 
-* Find a way to hide/collapse the send single message feature. *or just delete*
+* Fix display of group messages - there's no space visible between group and message.
 
 ## Dispatching (waiting for server side changes)
 
@@ -49,7 +47,7 @@ Groups don't show up in the Messages form until after you go to the Contacts for
 ## Contact Management
 
 * Either show the leaders first or have a toggle to *show leaders only.*
-* Edit Contacts (example: make someone a leader) or delete the menu item
+* Edit Contacts (example: make someone a leader) (later)
 * Import/export contacts (nope)
 
 ## Configuration

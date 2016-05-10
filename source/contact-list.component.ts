@@ -33,7 +33,6 @@ import {MessageSendFormComponent} from './message-send-form.component';
                 <div class="dropdown">
                     <span class="glyphicon glyphicon-option-vertical dropdown-toggle" id="contactActionsDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"></span>
                     <ul class="dropdown-menu" aria-labelledby="contactActionsDropdown">
-                    <li><a (click)="editContact(contact)">Edit</a></li>
                     <li><a (click)="deleteContact(contact)">Delete</a></li>
                     <li role="separator" class="divider"></li>
                     <li><a (click)="sendMessageToContact(contact)">Send Message to {{contact.name}}</a></li>

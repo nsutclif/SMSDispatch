@@ -22,7 +22,7 @@ import {DebugComponent} from './debug.component';
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
                         <button *ngIf="!_awsService.signedIn()" type="button" class="btn btn-default navbar-btn" (click)="signIn()">Sign in</button>
-                        <li *ngIf="_awsService.signedIn()" role="presentation" [class.active]="isRouteActive('config')"><a [routerLink]="['/Config']">Config</a></li>
+                        <!--<li *ngIf="_awsService.signedIn()" role="presentation" [class.active]="isRouteActive('config')"><a [routerLink]="['/Config']">Config</a></li>-->
                     </ul>
                 </div>
             </div>
