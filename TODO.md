@@ -30,15 +30,6 @@ Groups don't show up in the Messages form until after you go to the Contacts for
 
 * Need to at least prevent client from requesting map files.
 
-import {bootstrap} from 'angular2/platform/browser';
-import {App} from './app';
-import {enableProdMode} from 'angular2/core';
-
-enableProdMode();
-
-bootstrap(App, [])
-  .catch(err => console.error(err));
-
 # Features
 
 ## Testing
