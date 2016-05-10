@@ -31,7 +31,12 @@ export class MessagesService {
         this._dataStore = {messages: []};
         this.messages$ = new Observable<SMSMessage[]>((observer)=> {
             this._messagesObserver = observer;
+            this.notifyObserver(); // send current value to observer
         }).share();
+    }
+    
+    private notifyObserver() {
+        this._messagesObserver.next(this._dataStore.messages);
     }
     
     public loadAll() {
@@ -58,7 +63,7 @@ export class MessagesService {
                   });
               });
               
-              this._messagesObserver.next(this._dataStore.messages);
+              this.notifyObserver();
               
               // TODO: Stop using recursion here
               // http://stackoverflow.com/questions/35254323/rxjs-observable-pagination
