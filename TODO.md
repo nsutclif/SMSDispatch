@@ -54,8 +54,6 @@ Sometimes when I log in, the contacts fail to synchronize.  Possibly because I w
 
 ## Messages
 
-* In the drop down menu on this screen, I think the Forward to <group> functionality can be dropped. (But leave the forward to leaders)
-* Forward to <leader>, format as <name> (<group name>)
 * Allow Join <group> <name>
 
 ## API Gateway
