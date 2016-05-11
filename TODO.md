@@ -56,13 +56,8 @@ Sometimes when I log in, the contacts fail to synchronize.  Possibly because I w
 
 * Allow Join <group> <name>
 
-## API Gateway
-* Try to return what Twilio wants from /messages/incoming
-https://www.twilio.com/blog/2015/11/sending-selfies-without-servers-how-to-use-twilio-mms-amazon-lamba-and-amazons-gateway.html
-
 ## Contact Management
 
-* On the contact screen, drop down menu on a contact record, can you change the text so it lists  "Send message to Group: <group name>"
 * Either show the leaders first or have a toggle to *show leaders only.*
 * Improve handling of duplicate phone numbers.
 * Edit Contacts (example: make someone a leader) (later)
