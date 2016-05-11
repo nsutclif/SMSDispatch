@@ -60,10 +60,6 @@ Sometimes when I log in, the contacts fail to synchronize.  Possibly because I w
 * Try to return what Twilio wants from /messages/incoming
 https://www.twilio.com/blog/2015/11/sending-selfies-without-servers-how-to-use-twilio-mms-amazon-lamba-and-amazons-gateway.html
 
-## Dispatching (waiting for server side changes)
-
-* Include original sender's name when forwarding a message (if we have the name)
-
 ## Contact Management
 
 * On the contact screen, drop down menu on a contact record, can you change the text so it lists  "Send message to Group: <group name>"

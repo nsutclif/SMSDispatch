@@ -100,7 +100,11 @@ export class SMSMessageComponent implements OnInit, OnDestroy {
         let messageClone = JSON.parse(JSON.stringify(original));
         
         // include the original sender's phone number:
-        messageClone.text = 'From sms:' + original.from + ' - ' + messageClone.text;
+        messageClone.text = 'From sms:' + original.from;
+        if (original.contact && messageClone.contact.name) {
+            messageClone.text += ' (' + messageClone.contact.name + ')';
+        }
+        messageClone.text += ' - ' + original.text;
         
         return messageClone;
     }
