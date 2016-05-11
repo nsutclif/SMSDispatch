@@ -26,7 +26,7 @@ import {MessagesService} from './messages.service';
                 <input type="textarea" class="form-control" ngControl="body" placeholder="Message">
             </div>
             <button type="submit" class="btn btn-default">Send</button>
-            <button type="button" class="btn btn-default" *ngIf="fixedRecipient" (click)="doneSending(0)">Cancel</button>
+            <button type="button" class="btn btn-default" (click)="doneSending(0)">Cancel</button>
             <span *ngIf="!success">{{lastError}}</span>
             <span class="glyphicon glyphicon-ok" *ngIf="success"></span>
         </form>
