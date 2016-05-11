@@ -1,3 +1,17 @@
+# Preparation
+
+ASAP
+* Confirm computer
+
+* May 17 (day before)
+* TH will clear out messages
+* Make sure we can log into "live"/production account: "Test 1"
+* TH will set up leaders
+
+* May 28 (day before)
+* TH may clear out messages again?
+
+
 # Project
 
 # Testing
@@ -29,6 +43,9 @@ Sometimes when I log in, the contacts fail to synchronize.  Possibly because I w
 
 # Features
 
+## AWS
+* Check billing
+
 ## Testing
 
 * Test on other computers/devices/browsers
@@ -37,37 +54,43 @@ Sometimes when I log in, the contacts fail to synchronize.  Possibly because I w
 
 ## Messages
 
-* Fix display of group messages - there's no space visible between group and message.
+* I think we should retain the ability to send a message to any random number... 
+* In the drop down menu on this screen, I think the Forward to <group> functionality can be dropped. (But leave the forward to leaders)
+* Forward to <leader>, format as <name> (<group name>)
+* Allow Join <group> <name>
+
+## API Gateway
+* Try to return what Twilio wants from /messages/incoming
+https://www.twilio.com/blog/2015/11/sending-selfies-without-servers-how-to-use-twilio-mms-amazon-lamba-and-amazons-gateway.html
 
 ## Dispatching (waiting for server side changes)
 
-* Display group names in message list (might be done)
 * Include original sender's name when forwarding a message (if we have the name)
 
 ## Contact Management
 
+* On the contact screen, drop down menu on a contact record, can you change the text so it lists  "Send message to Group: <group name>"
 * Either show the leaders first or have a toggle to *show leaders only.*
+* Improve handling of duplicate phone numbers.
 * Edit Contacts (example: make someone a leader) (later)
 * Import/export contacts (nope)
 
 ## Configuration
-
-* Hide the config form for now.
-* Cancel/Reset button on form
-
-# Improve Login
-
-Investigate Auth Zero
-https://github.com/auth0/auth0-s3-sample
-https://auth0.com/authenticate/angular2/aws-addon
-
-Authenticating into Twilio
 
 # Security
 
 * Enable signing on API Gateway?
 * Prevent XSS for user-entered data
 http://martinfowler.com/articles/web-security-basics.
+
+# Improve Login
+
+Investigate Auth Zero
+
+https://github.com/auth0/auth0-s3-sample
+https://auth0.com/authenticate/angular2/aws-addon
+
+Authenticating into Twilio
 
 # Cleanup
 
