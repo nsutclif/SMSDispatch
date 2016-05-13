@@ -23,7 +23,7 @@ import {ContactFormComponent} from './contact-form.component';
                 <div class="row" *ngIf="!message.outgoing">
                     <div class="col-md-10">
                         <div>{{getFromDisplayText()}} at {{getDateDisplayText()}}:</div>
-                        <div class="panel panel-default bubble">
+                        <div class="panel panel-default bubble incoming">
                             <span class="dropdown">
                                 <span class="glyphicon glyphicon-option-vertical dropdown-toggle" id="contactActionsDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"></span>
                                 <ul class="dropdown-menu" aria-labelledby="contactActionsDropdown">
@@ -57,6 +57,9 @@ import {ContactFormComponent} from './contact-form.component';
         .bubble {
             padding: 5px;
             border-radius: 10px;
+        }
+        .incoming{
+            background-color: #E8F0FF;
         }
     `],
     inputs: ['message']
