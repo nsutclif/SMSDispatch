@@ -17,7 +17,7 @@ import {ContactFormComponent} from './contact-form.component';
                     </div>
                     <div class="col-md-10">
                         <div>To: {{getToDisplayText()}} at {{getDateDisplayText()}}</div>
-                        <div class="panel panel-default bubble">{{message.text}}</div>
+                        <div class="panel panel-default bubble outgoing">{{message.text}}</div>
                     </div>
                 </div>
                 <div class="row" *ngIf="!message.outgoing">
@@ -59,6 +59,8 @@ import {ContactFormComponent} from './contact-form.component';
             border-radius: 10px;
         }
         .incoming{
+        }
+        .outgoing{
             background-color: #E8F0FF;
         }
     `],
