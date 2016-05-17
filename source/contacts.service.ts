@@ -76,10 +76,16 @@ export class ContactsService {
         
         // also sort the contacts:
         this._dataStore.contacts.sort((a: Contact, b: Contact): number => {
-            let result =  a.group.localeCompare(b.group);
+            let aGroup: string = a.group || '';
+            let bGroup: string = b.group || '';
+            
+            let result =  aGroup.localeCompare(bGroup);
             
             if (result === 0) {
-                result = a.name.localeCompare(b.name);
+                let aName = a.name || '';
+                let bName = b.name || '';
+                
+                result = aName.localeCompare(bName);
             }
             
             return result;

@@ -37,6 +37,10 @@ The first time I add a contact, I get a weird "synchronize failed" error but it 
 Sometimes when I log in, the contacts fail to synchronize.  Possibly because I was doing a slow upload?  It doesn't seem to retry.
  -> Try logging in after clearing the cache.
 
+
+** If there's an exception sorting the contacts, everything goes off the rails.
+
+
 # Performance
 
 * Need to at least prevent client from requesting map files. (maybe they're not if developer tools aren't displayed?)
