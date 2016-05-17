@@ -162,7 +162,9 @@ export class SMSMessageComponent implements OnInit, OnDestroy {
         if (Array.isArray(regexResult)) {
             return regexResult[0];
         } else {
-            console.log('stripDelimiters regex not found');
+            if (inputString) {
+                console.log('stripDelimiters regex not found: {' + inputString + '}');
+            }
             return inputString;
         };
     };
