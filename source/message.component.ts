@@ -154,47 +154,34 @@ export class SMSMessageComponent implements OnInit, OnDestroy {
         }
     }
     
-    private stripDelimiters (inputString: string): string {
-        // Extract any words.  Leave behind things like colons and spaces.
-        // https://regex101.com/#javascript
-        let regexResult: string[] = /\w+(\s+\w+)*/.exec(inputString);
-        
-        if (Array.isArray(regexResult)) {
-            return regexResult[0];
-        } else {
-            if (inputString) {
-                console.log('stripDelimiters regex not found: {' + inputString + '}');
-            }
-            return inputString;
-        };
-    };
-                
     private extractContactDetails() {
         this.possibleGroup = '';
         this.possibleName = '';
         
-        let messageText = this.message.text;
-        
-        let lowerCaseText = messageText.toLowerCase();
-        
-        let joinPos = lowerCaseText.indexOf('join');
-        
-        if (joinPos !==-1) {
-            let namePos = lowerCaseText.indexOf('name');
-            
-            let possibleName = '';
-            if (namePos > joinPos) {
-                possibleName = messageText.slice(namePos + 4);
-                
-                messageText = messageText.slice(0, namePos);
+        try {
+            if (!this.message.text) {
+                return;
             }
-            let possibleGroup = messageText.slice(joinPos + 4);
             
-            possibleGroup = this.stripDelimiters(possibleGroup);
-            possibleName = this.stripDelimiters(possibleName);
+            let words = this.message.text.split(' ');
             
-            this.possibleGroup = possibleGroup;
-            this.possibleName = possibleName;
-        }  
+            if (words.length < 2) { // need at least "join <group>"
+                return;
+            }
+            
+            if (words[0].toLowerCase().indexOf('join') !== 0) {
+                return;
+            }
+            
+            this.possibleGroup = words[1];
+            
+            if (words.length < 3) { // no name included.
+                return;
+            }
+            
+            this.possibleName = words.slice(2).join(' '); // assume all the rest is a name.
+        } catch (e) {
+            console.log('Error extracting contact details: ' + e);
+        }
     }
 }

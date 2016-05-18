@@ -39,6 +39,8 @@ Sometimes when I log in, the contacts fail to synchronize.  Possibly because I w
 
 
 ** If there's an exception sorting the contacts, everything goes off the rails.
+** MissingRequiredParameter: Missing required key 'IdentityId' in params error - looks like a problem logging into Cognito
+** https://mobile.awsblog.com/post/TxBVEDL5Z8JKAC/Use-Amazon-Cognito-in-your-website-for-simple-AWS-authentication
 
 
 # Performance
@@ -57,8 +59,6 @@ Sometimes when I log in, the contacts fail to synchronize.  Possibly because I w
 * Test with and without "prod mode" (boot.ts)
 
 ## Messages
-
-* Allow Join <group> <name>
 
 ## Contact Management
 
