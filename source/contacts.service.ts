@@ -12,7 +12,7 @@ import {AWSService} from './aws.service';
 // The error is the same as if I misspell aws-sdk.
 // https://blog.nraboy.com/2016/01/include-external-javascript-libraries-in-an-angular-2-typescript-project/
 declare var AWS: any;
-
+ 
 @Injectable()
 export class ContactsService {
     contacts$: Observable<Contact[]>;
@@ -59,10 +59,14 @@ export class ContactsService {
         let groupMap = new Map();
         
         this._dataStore.contacts.map((contact: Contact)=>{
-            let contactGroup: ContactGroup = <ContactGroup>groupMap.get(contact.group);
+            let contactGroupNameLowerCase = contact.group ? contact.group.toLowerCase() : '';
+            
+            console.log(contactGroupNameLowerCase);
+            
+            let contactGroup: ContactGroup = <ContactGroup>groupMap.get(contactGroupNameLowerCase);
             if (!contactGroup) {
                 contactGroup = {name: contact.group, contacts: [contact]};
-                groupMap.set(contact.group, contactGroup);
+                groupMap.set(contactGroupNameLowerCase, contactGroup);
             }
             else {
                 contactGroup.contacts.push(contact);
@@ -93,8 +97,13 @@ export class ContactsService {
     }
     
     public getContactGroup(groupName: string): ContactGroup {
+        groupName = groupName.toLowerCase();
         for (var i=0; i < this._dataStore.contactGroups.length; i++) {
-            if (this._dataStore.contactGroups[i].name === groupName) {
+            let contactGroup = this._dataStore.contactGroups[i];
+
+            let contactGroupName = contactGroup.name ? contactGroup.name.toLowerCase() : '';
+            
+            if (contactGroupName === groupName) {
                 return this._dataStore.contactGroups[i];
             }
         }
