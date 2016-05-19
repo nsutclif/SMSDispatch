@@ -61,8 +61,6 @@ export class ContactsService {
         this._dataStore.contacts.map((contact: Contact)=>{
             let contactGroupNameLowerCase = contact.group ? contact.group.toLowerCase() : '';
             
-            console.log(contactGroupNameLowerCase);
-            
             let contactGroup: ContactGroup = <ContactGroup>groupMap.get(contactGroupNameLowerCase);
             if (!contactGroup) {
                 contactGroup = {name: contact.group, contacts: [contact]};
