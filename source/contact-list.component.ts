@@ -36,7 +36,7 @@ import {MessageSendFormComponent} from './message-send-form.component';
                     <li><a (click)="deleteContact(contact)">Delete</a></li>
                     <li role="separator" class="divider"></li>
                     <li><a (click)="sendMessageToContact(contact)">Send Message to {{contact.name}}</a></li>
-                    <li><a (click)="sendMessageToContactGroup(contact)">Send Message to Group: {{contact.group}} Group</a></li>
+                    <li><a (click)="sendMessageToContactGroup(contact)">Send Message to Group: {{contact.group}}</a></li>
                     </ul>
                 </div>
                 </td>
