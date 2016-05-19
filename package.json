@@ -19,7 +19,7 @@
     "zone.js": "0.6.12",
     "bootstrap": "3.3.6",
     "jquery": "2.2.3",
-    "aws-sdk": "2.3.12",
+    "aws-sdk": "2.3.13",
     "amazon-cognito-js": "git://github.com/aws/amazon-cognito-js.git#aaf5224eddaf4dc2aae22d9e1f2c1e0271d16a60"
   },
   "devDependencies": {
