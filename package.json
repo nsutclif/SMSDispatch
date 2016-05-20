@@ -19,7 +19,7 @@
     "zone.js": "0.6.12",
     "bootstrap": "3.3.6",
     "jquery": "2.2.3",
-    "aws-sdk": "2.3.13",
+    "aws-sdk": "2.3.13"
   },
   "devDependencies": {
     "concurrently": "2.1.0",
