@@ -5,6 +5,8 @@ import {Observer} from 'rxjs/Observer';
 import {SMSMessage} from './message';
 import {ContactsService} from './contacts.service';
 
+// declare var apigClient: any;
+
 // HTTP polling example:
 // http://chariotsolutions.com/blog/post/angular2-observables-http-separating-services-components/
 // Also useful:
@@ -40,6 +42,17 @@ export class MessagesService {
     }
     
     public loadAll() {
+        // let params = {
+        //     Skip: this._dataStore.messages.length,
+        //     Limit: MESSAGES_PER_CALL
+        // }
+        // apigClient.messagesGet(params).then((result) => {
+        //     console.log(result);
+        // }).catch((result) => {
+        //     console.log('Error getting messages: ' + result);
+        // });
+        
+        
         // TODO: Use hypermedia style of pagination on the server side.
         let requestURL = MESSAGES_URL + '?Skip=' + this._dataStore.messages.length + '&Limit=' + MESSAGES_PER_CALL;
         let subscription = this._http.get(requestURL)
