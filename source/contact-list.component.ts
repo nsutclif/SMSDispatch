@@ -146,9 +146,9 @@ export class ContactListComponent implements OnInit, OnDestroy {
         this.filteredContacts = this.contacts.filter((value: Contact): boolean => {
             return (
                 (this.searchText === '')
-                || (value.group.toLowerCase().indexOf(lowerSearchText) !== -1)
-                || (value.name.toLowerCase().indexOf(lowerSearchText) !== -1)                
-                || (value.phone.toLowerCase().indexOf(lowerSearchText) !== -1)                
+                || ((value.group) && (value.group.toLowerCase().indexOf(lowerSearchText) !== -1))
+                || ((value.name) && (value.name.toLowerCase().indexOf(lowerSearchText) !== -1))                
+                || ((value.phone) && (value.phone.toLowerCase().indexOf(lowerSearchText) !== -1))                
             );
         });
     }

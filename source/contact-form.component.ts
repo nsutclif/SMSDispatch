@@ -80,6 +80,8 @@ export class ContactFormComponent implements OnInit {
     }
     
     private doneAdding(doneEventDelay: number) {
+        this.possibleName = '';
+        this.possibleGroup = '';
         this.resetModel();
         setTimeout(() => {
             this.done.emit({});
