@@ -182,6 +182,29 @@ export class ContactsService {
         });
     }
     
+    public updateContact(contact: Contact) {
+        // TODO: Share code with addContact()
+        const phoneKey = contact.phone;
+        
+        const recordValue: any = JSON.parse(JSON.stringify(contact));
+        delete recordValue.phone;
+        
+        let clonedContact: Contact = JSON.parse(JSON.stringify(contact));
+        
+        this.contactsDataset.put(phoneKey, JSON.stringify(recordValue), (err, record)=> {
+            if(err) {
+                console.log('Error adding contact: ' + err);
+            }
+            else {
+                console.log('record added.');
+                this._awsService.syncDataset(this.contactsDataset);
+        
+                this.changedDataStore();
+            }
+            
+        });
+     }
+    
     private comparePhonesApprox(phoneA: string, phoneB: string): boolean {
         let compareA = this.stripPhoneNumber(phoneA);
         let compareB = this.stripPhoneNumber(phoneB);

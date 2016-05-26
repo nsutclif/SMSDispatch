@@ -33,6 +33,7 @@ import {MessageSendFormComponent} from './message-send-form.component';
                 <div class="dropdown">
                     <span class="glyphicon glyphicon-option-vertical dropdown-toggle" id="contactActionsDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"></span>
                     <ul class="dropdown-menu" aria-labelledby="contactActionsDropdown">
+                    <li><a (click)="editContact(contact)">Edit</a></li>
                     <li><a (click)="deleteContact(contact)">Delete</a></li>
                     <li role="separator" class="divider"></li>
                     <li><a (click)="sendMessageToContact(contact)">Send Message to {{contact.name}}</a></li>
@@ -54,7 +55,7 @@ import {MessageSendFormComponent} from './message-send-form.component';
             <tr *ngIf="contact===recipientBeingEdited">
               <td></td>
               <td colspan=4>
-                <contact-form></contact-form>
+                <contact-form [existingContact]="contact" [fixedPhoneNumber]="contact.phone" (done)="doneEditingContact()"></contact-form>
               </td>
             </tr>
           </template>
@@ -100,6 +101,10 @@ export class ContactListComponent implements OnInit, OnDestroy {
     
     private editContact(contact: Contact) {
         this.recipientBeingEdited = contact;
+    }
+    
+    private doneEditingContact() {
+        this.recipientBeingEdited = null;
     }
     
     private deleteContact(contact: Contact) {

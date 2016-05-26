@@ -22,12 +22,12 @@ import {ContactsService} from './contacts.service';
         <label for="leader">Leader</label>
         <input type="checkbox" class="form-control" ngControl="leader">
         
-        <button type="submit" class="btn btn-default">Add</button>
+        <button type="submit" class="btn btn-default">Save</button>
         <button type="button" class="btn btn-default" (click)="doneAdding(0)">Cancel</button>
       </form>
     `,
     directives: [FORM_DIRECTIVES],
-    inputs: ['fixedPhoneNumber','possibleName','possibleGroup']
+    inputs: ['fixedPhoneNumber','possibleName','possibleGroup','existingContact']
 })
 export class ContactFormComponent implements OnInit {
     form: ControlGroup;
@@ -44,25 +44,36 @@ export class ContactFormComponent implements OnInit {
     @Input()
     public possibleGroup: string;
     
+    @Input()
+    public existingContact: Contact;
+    
     constructor(private _contactsService: ContactsService, private _formBuilder: FormBuilder) {        
     }
     
     onSubmit() {
-        let phone: string;
-        if (this.fixedPhoneNumber) {
-            phone = this._contactsService.stripPhoneNumber(this.fixedPhoneNumber);
+        if (this.existingContact) {
+            this.existingContact.name = this.form.value.name;
+            this.existingContact.group = this.form.value.group;
+            this.existingContact.leader = this.form.value.leader;
+            
+            this._contactsService.updateContact(this.existingContact);
         } else {
-            phone = this.form.value.phone;
+            let phone: string;
+            if (this.fixedPhoneNumber) {
+                phone = this._contactsService.stripPhoneNumber(this.fixedPhoneNumber);
+            } else {
+                phone = this.form.value.phone;
+            }
+            
+            let newContact: Contact = {
+                phone: phone,
+                name: this.form.value.name,
+                group: this.form.value.group,
+                leader: this.form.value.leader
+            }
+            
+            this._contactsService.addContact(newContact);
         }
-        
-        let newContact: Contact = {
-            phone: phone,
-            name: this.form.value.name,
-            group: this.form.value.group,
-            leader: this.form.value.leader
-        }
-        
-        this._contactsService.addContact(newContact);
         this.doneAdding(1000);
     }
     
@@ -70,12 +81,24 @@ export class ContactFormComponent implements OnInit {
         console.log(this.possibleGroup);
         console.log(this.possibleName);
         
+        let initialName: string;
+        let initialGroup: string;
+        let initialLeader: boolean;
+        if (this.existingContact) {
+            initialName = this.existingContact.name;
+            initialGroup = this.existingContact.group;
+            initialLeader = this.existingContact.leader;
+        } else {
+            initialName = this.possibleName;
+            initialGroup = this.possibleGroup;
+            initialLeader = false;
+        }
         
         this.form = this._formBuilder.group({
             phone: ['', Validators.required],
-            name: [this.possibleName, Validators.nullValidator],
-            group: [this.possibleGroup, Validators.required],
-            leader: [false, Validators.nullValidator]
+            name: [initialName, Validators.nullValidator],
+            group: [initialGroup, Validators.required],
+            leader: [initialLeader, Validators.nullValidator]
         });
     }
     
