@@ -1,4 +1,3 @@
-///<reference path="../typings/browser/ambient/aws-sdk/aws-sdk.d.ts"/>
 import {Injectable} from 'angular2/core';
 import {Observable} from 'rxjs/Observable';
 import {Observer} from 'rxjs/Observer';
