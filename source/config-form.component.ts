@@ -1,5 +1,5 @@
-import {Component, OnInit} from 'angular2/core';
-import {NgForm} from 'angular2/common';
+import {Component, OnInit} from '@angular/core';
+import {NgForm} from '@angular/common';
 import {Config} from './config';
 import {ConfigService} from './config.service';
 

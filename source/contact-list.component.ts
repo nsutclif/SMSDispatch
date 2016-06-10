@@ -1,4 +1,4 @@
-import {Component, OnInit, OnDestroy} from 'angular2/core';
+import {Component, OnInit, OnDestroy} from '@angular/core';
 import {Subscription} from 'rxjs/Subscription';
 import {Contact, ContactGroup} from './contact';
 import {ContactsService} from './contacts.service';

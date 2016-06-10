@@ -1,5 +1,5 @@
-import {Component, OnInit, Input, Output, EventEmitter} from 'angular2/core';
-import {NgForm, ControlGroup, FormBuilder, Validators, FORM_DIRECTIVES} from 'angular2/common';
+import {Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
+import {NgForm, ControlGroup, FormBuilder, Validators, FORM_DIRECTIVES} from '@angular/common';
 import {Contact} from './contact';
 import {ContactsService} from './contacts.service';
 
