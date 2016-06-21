@@ -1,5 +1,5 @@
 # Compiled .js files
-*.js
+app
 
 # Compiled .map files
 *.map
