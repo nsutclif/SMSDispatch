@@ -1,4 +1,4 @@
-import {Injectable} from 'angular2/core';
+import {Injectable} from '@angular/core';
 
 declare var FB: any;
 declare var AWS: any;
@@ -78,9 +78,18 @@ export class AWSService {
                         console.log('onConflict');
                         let resolved = [];
                         conflicts.map((conflict) => {
-                            // For now, just go with remote record.
-                            console.log('conflict: ' + conflict);
-                            resolved.push(conflict.resolveWithRemoteRecord());
+                            console.log('conflict: ' + JSON.stringify(conflict));
+                            // In my testing, if I deleted a record and then deleted another record,
+                            // I would get a sync conflict on the second record.  Not sure why.
+                            // The date of the record for the deleted data would be more recent.
+                            // For now, just go with most recent record.
+                            if (conflict.remoteRecord.LastModifiedDate > conflict.localRecord.LastModifiedDate) {
+                                console.log('resolving with remote');
+                                resolved.push(conflict.resolveWithRemoteRecord());
+                            } else {
+                                console.log('resolving with local');
+                                resolved.push(conflict.resolveWithLocalRecord());
+                            }
                         });
                         dataset.resolve(resolved, () => {
                             return callback(true);

@@ -10,9 +10,5 @@
     "noImplicitAny": false,
     "rootDir": "source",
     "outDir": "app"
-  },
-  "exclude": [
-    "node_modules",
-    "typings"
-  ]
+  }
 }
