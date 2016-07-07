@@ -5,8 +5,8 @@ import {Observer} from 'rxjs/Observer';
 import {SMSMessage} from './message';
 import {ContactsService} from './contacts.service';
 
+declare const AWS: any;
 declare const apigClientFactory: any;
-const apigClient: any = apigClientFactory.newClient();
 
 // HTTP polling example:
 // http://chariotsolutions.com/blog/post/angular2-observables-http-separating-services-components/
@@ -43,58 +43,52 @@ export class MessagesService {
     }
     
     public loadAll() {
+        const clientConfig = {
+            accessKey: AWS.config.credentials.accessKeyId,
+            secretKey: AWS.config.credentials.secretAccessKey,
+            sessionToken: AWS.config.credentials.sessionToken
+
+        };
+        const apigClient: any = apigClientFactory.newClient(clientConfig);
+
         let params = {
             Skip: this._dataStore.messages.length,
             Limit: MESSAGES_PER_CALL,
-            StartDate: null
+            StartDate: ''
         }
+        console.log(JSON.stringify(params));
+        // TODO: Test some error conditions here.       
         apigClient.messagesGet(params).then((result) => {
             console.log(result);
+            result.data.map(dtoMessage => {
+                // console.log(JSON.stringify(dtoMessage));
+                this._dataStore.messages.unshift({
+                    id: dtoMessage.id,
+                    text: dtoMessage.body,
+                    date: new Date(dtoMessage.messagesortkey), // Currently the messagesortkey is the date...
+                    to: dtoMessage.to,
+                    from: dtoMessage.from,
+                    outgoing: dtoMessage.direction === 'outbound-api',
+                    contact: null
+                });
+            })
+            
+            this.notifyObserver();
+            
+            // TODO: Stop using recursion here
+            // http://stackoverflow.com/questions/35254323/rxjs-observable-pagination
+            
+            
+            if(result.data.length > 0) {
+                this.loadAll();
+            } else {
+                // TODO: Stop doing this.
+                // http://chariotsolutions.com/blog/post/angular2-observables-http-separating-services-components/
+                setTimeout(this.loadAll.bind(this), POLLING_INTERVAL);
+            }
         }).catch((result) => {
             console.log('Error getting messages: ' + result);
         });
-        
-        
-        // TODO: Use hypermedia style of pagination on the server side.
-        let requestURL = MESSAGES_URL + '?Skip=' + this._dataStore.messages.length + '&Limit=' + MESSAGES_PER_CALL;
-        let subscription = this._http.get(requestURL)
-          .subscribe((response: Response) => {
-              let dtoMessages: any[] = response.json();
-              if (!Array.isArray(dtoMessages)) {
-                  console.log('response.json is not an array: ' + JSON.stringify(response.json()));
-                  dtoMessages = [];
-              }
-
-              dtoMessages.map(dtoMessage => {
-                //   console.log(JSON.stringify(dtoMessage));
-                  this._dataStore.messages.unshift({
-                      id: dtoMessage.id,
-                      text: dtoMessage.body,
-                      date: new Date(dtoMessage.messagesortkey), // Currently the messagesortkey is the date...
-                      to: dtoMessage.to,
-                      from: dtoMessage.from,
-                      outgoing: dtoMessage.direction === 'outbound-api',
-                      contact: null
-                  });
-              });
-              
-              this.notifyObserver();
-              
-              // TODO: Stop using recursion here
-              // http://stackoverflow.com/questions/35254323/rxjs-observable-pagination
-              
-              console.log('Messages: ' + dtoMessages.length);
-              
-              if(dtoMessages.length > 0) {
-                  this.loadAll();
-              } else {
-                  // TODO: Stop doing this.
-                  // http://chariotsolutions.com/blog/post/angular2-observables-http-separating-services-components/
-                  setTimeout(this.loadAll.bind(this), POLLING_INTERVAL);
-              }
-          }, (error) => {
-              console.log('Eror loading messages: ' + error);
-          })
     }
     
     private extractSendResponse(res: Response) {

@@ -1,17 +1,3 @@
-# Preparation
-
-ASAP
-* Confirm computer
-
-* May 17 (day before)
-* TH will clear out messages
-* Make sure we can log into "live"/production account: "Test 1"
-* TH will set up leaders
-
-* May 28 (day before)
-* TH may clear out messages again?
-
-
 # Project
 
 # Testing
