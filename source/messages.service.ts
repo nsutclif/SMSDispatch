@@ -41,15 +41,19 @@ export class MessagesService {
     private notifyObserver() {
         this._messagesObserver.next(this._dataStore.messages);
     }
-    
-    public loadAll() {
+
+    private getAPIClient(): any {
         const clientConfig = {
             accessKey: AWS.config.credentials.accessKeyId,
             secretKey: AWS.config.credentials.secretAccessKey,
             sessionToken: AWS.config.credentials.sessionToken
 
         };
-        const apigClient: any = apigClientFactory.newClient(clientConfig);
+        return apigClientFactory.newClient(clientConfig);
+    }
+    
+    public loadAll() {
+        const apigClient: any = this.getAPIClient();
 
         let params = {
             Skip: this._dataStore.messages.length,
@@ -112,21 +116,17 @@ export class MessagesService {
     }
     
     public sendMessageDTO(dto: string): Observable<any> {
-        let headers = new Headers({
-            'Content-Type': 'application/json'
-        });
-        let options = new RequestOptions({
-            headers: headers
-        });
-        
-        console.log('about to post: ' + dto);
-        console.log('to: ' + OUTGOING_MESSAGES_URL);
-        
-        return this._http.post(OUTGOING_MESSAGES_URL, dto, options)
-                 .map(this.extractSendResponse)
-                 .catch(this.handleSendMessageError);
+        const apigClient: any = this.getAPIClient();
+
+        let params = {
+            body: dto,
+        }
+        console.log(JSON.stringify(params));
+        // TODO: Test some error conditions here.       
+        return Observable.fromPromise(apigClient.messagesOutgoingPost(params));
     }
-    
+
+
     public sendMessage(message: SMSMessage): Observable<any> {
         let body = JSON.stringify({
             message: {

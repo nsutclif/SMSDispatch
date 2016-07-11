@@ -12,6 +12,8 @@ Groups:
 
 # Bugs
 
+Page indicator isn't working
+
 need to validate phone numbers in form.
 also need to write sync event handlers. (at least partially done)
 
@@ -59,7 +61,7 @@ Sometimes when I log in, the contacts fail to synchronize.  Possibly because I w
 
 # Security
 
-* Enable signing on API Gateway?
+* Enable signing on API Gateway? ** Half done **
 * Prevent XSS for user-entered data
 http://martinfowler.com/articles/web-security-basics.
 
