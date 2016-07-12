@@ -2,51 +2,36 @@
 
 # Testing
 
-* Come up with a set of representative tests
-
-Groups:
-- Course group (biggest) 100?
-- Food Service (not registered?) 10?
-- First Aid 10-20
-- Water Stations: 30
-
 # Bugs
 
-Page indicator isn't working
+* Page/tab indicator isn't working
+* After switching accounts, the contacts don't show up properly (?)
+* Duplicate messages being displayed; refresh required (server side?)
+* Incoming malformed messages (quote characters?) don't make it
+* Intermittent Twilio callback failure (server side?)
+* Validate phone numbers for new contacts.  Previously, any bad data in browser local storage completely borked us.
+* Occasional error logging in
+  * MissingRequiredParameter: Missing required key 'IdentityId' in params error - looks like a problem logging into Cognito
+  * https://mobile.awsblog.com/post/TxBVEDL5Z8JKAC/Use-Amazon-Cognito-in-your-website-for-simple-AWS-authentication
 
-need to validate phone numbers in form.
-also need to write sync event handlers. (at least partially done)
+* Is the following all fixed?
 
-without those, any bad data in browser local storage completely borks us.
-
-What about duplicate phone numbers?
-
-The first time I add a contact, I get a weird "synchronize failed" error but it seems to synchronize after I add the second contact.
+  The first time I add a contact, I get a weird "synchronize failed" error but it seems to synchronize after I add the second contact.
 Sometimes when I log in, the contacts fail to synchronize.  Possibly because I was doing a slow upload?  It doesn't seem to retry.
  -> Try logging in after clearing the cache.
 
 
-** If there's an exception sorting the contacts, everything goes off the rails.
-** MissingRequiredParameter: Missing required key 'IdentityId' in params error - looks like a problem logging into Cognito
-** https://mobile.awsblog.com/post/TxBVEDL5Z8JKAC/Use-Amazon-Cognito-in-your-website-for-simple-AWS-authentication
-
-
 # Performance
 
-* Need to at least prevent client from requesting map files. (maybe they're not if developer tools aren't displayed?)
+* Improve deployment.  Use System.js to build for deployment?
 
 # Features
 
-## AWS
-* Check billing
-
-## Testing
-
-* Test on other computers/devices/browsers
-* Load Testing for incoming 
-* Test with and without "prod mode" (boot.ts)
-
 ## Messages
+
+* Send to a list of groups
+* When adding to a group, present a dropdown of existing groups
+* Display images for MMS
 
 ## Contact Management
 
@@ -61,7 +46,6 @@ Sometimes when I log in, the contacts fail to synchronize.  Possibly because I w
 
 # Security
 
-* Enable signing on API Gateway? ** Half done **
 * Prevent XSS for user-entered data
 http://martinfowler.com/articles/web-security-basics.
 
