@@ -13,7 +13,6 @@
 * Occasional error logging in
   * MissingRequiredParameter: Missing required key 'IdentityId' in params error - looks like a problem logging into Cognito
   * https://mobile.awsblog.com/post/TxBVEDL5Z8JKAC/Use-Amazon-Cognito-in-your-website-for-simple-AWS-authentication
-
 * Is the following all fixed?
 
   The first time I add a contact, I get a weird "synchronize failed" error but it seems to synchronize after I add the second contact.
