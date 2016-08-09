@@ -5,12 +5,12 @@
 # Bugs
 
 * Page/tab indicator isn't working
-* After switching accounts, the contacts don't show up properly (?)
 * Duplicate messages being displayed; refresh required (server side?)
 * Incoming malformed messages (quote characters?) don't make it
-* Intermittent Twilio callback failure (server side?)
+* Intermittent Twilio callback failure - when the server asks for more info about the message it just got (server side?)
 * Validate phone numbers for new contacts.  Previously, any bad data in browser local storage completely borked us.
-* Occasional error logging in
+* After switching accounts, the contacts don't show up properly (?)
+* Occasional error logging in (maybe the same as above?)
   * MissingRequiredParameter: Missing required key 'IdentityId' in params error - looks like a problem logging into Cognito
   * https://mobile.awsblog.com/post/TxBVEDL5Z8JKAC/Use-Amazon-Cognito-in-your-website-for-simple-AWS-authentication
 * Is the following all fixed?
