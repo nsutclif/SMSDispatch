@@ -4,7 +4,6 @@
 
 # Bugs
 
-* Page/tab indicator isn't working
 * Duplicate messages being displayed; refresh required (server side?)
 * Incoming malformed messages (quote characters?) don't make it
 * Intermittent Twilio callback failure - when the server asks for more info about the message it just got (server side?)
