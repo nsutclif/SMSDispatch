@@ -36,9 +36,7 @@ Sometimes when I log in, the contacts fail to synchronize.  Possibly because I w
 
 * Either show the leaders first or have a toggle to *show leaders only.*
 * Improve handling of duplicate phone numbers.
-* Deleting contacts doesn't seem to work.
 * That issue with contacts not appearing the first time logging on to the system with a new acct.  Refresh and everything then works fine
-* Edit Contacts (example: make someone a leader) (later)
 * Import/export contacts (nope)
 
 ## Configuration

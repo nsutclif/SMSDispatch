@@ -17,12 +17,12 @@ import {DebugComponent} from './debug.component';
             <div class="container-fluid">
                 <div class="navbar-collapse">
                     <ul *ngIf="_awsService.signedIn()" class="nav navbar-nav navbar-left">
-                        <li role="presentation" [class.active]="isRouteActive('messages')"><a [routerLink]="['/Messages']">Messages</a></li>
-                        <li role="presentation" [class.active]="isRouteActive('contacts')"><a [routerLink]="['/Contacts']">Contacts</a></li>
+                        <li role="presentation" [class.active]="isRouteActive('Messages')"><a [routerLink]="['/Messages']">Messages</a></li>
+                        <li role="presentation" [class.active]="isRouteActive('Contacts')"><a [routerLink]="['/Contacts']">Contacts</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
                         <button *ngIf="!_awsService.signedIn()" type="button" class="btn btn-default navbar-btn" (click)="signIn()">Sign in</button>
-                        <!--<li *ngIf="_awsService.signedIn()" role="presentation" [class.active]="isRouteActive('config')"><a [routerLink]="['/Config']">Config</a></li>-->
+                        <!--<li *ngIf="_awsService.signedIn()" role="presentation" [class.active]="isRouteActive('Config')"><a [routerLink]="['/Config']">Config</a></li>-->
                     </ul>
                 </div>
             </div>
@@ -49,24 +49,20 @@ import {DebugComponent} from './debug.component';
 ])
 export class AppComponent {
     public title = 'SMS Dispatch';
-    public currentRoute: string;
+    public currentRouteName: string;
     constructor(
         router: Router,
         private _awsService: AWSService,
         private _contactsService: ContactsService,
         private _configService: ConfigService) {
         var component: AppComponent = this;
-        router.subscribe(function(route: string) {
-            component.currentRoute = route;
+        router.subscribe(function(route: any) {
+            component.currentRouteName = route.instruction.routeName;
         });
     }
     
-    onRouteChanged(path: string) {
-        this.currentRoute = path;
-    }
-    
     isRouteActive(route: string): boolean {
-        return route === this.currentRoute;
+        return route === this.currentRouteName;
     }
     
     signIn(): void {
