@@ -28,10 +28,11 @@ export class MessagesService {
     private _messagesObserver: Observer<SMSMessage[]>;
     private _dataStore :{
         messages: SMSMessage[];
+        nextStartDate: string;
     }
     
     constructor (private _http: Http, private _contactsService: ContactsService) {
-        this._dataStore = {messages: []};
+        this._dataStore = {messages: [], nextStartDate: ''};
         this.messages$ = new Observable<SMSMessage[]>((observer)=> {
             this._messagesObserver = observer;
             this.notifyObserver(); // send current value to observer
@@ -56,15 +57,14 @@ export class MessagesService {
         const apigClient: any = this.getAPIClient();
 
         let params = {
-            Skip: this._dataStore.messages.length,
             Limit: MESSAGES_PER_CALL,
-            StartDate: ''
+            StartDate: this._dataStore.nextStartDate
         }
         console.log(JSON.stringify(params));
         // TODO: Test some error conditions here.       
         apigClient.messagesGet(params).then((result) => {
             console.log(result);
-            result.data.map(dtoMessage => {
+            result.data.records.map(dtoMessage => {
                 // console.log(JSON.stringify(dtoMessage));
                 this._dataStore.messages.unshift({
                     id: dtoMessage.id,
@@ -75,7 +75,8 @@ export class MessagesService {
                     outgoing: dtoMessage.direction === 'outbound-api',
                     contact: null
                 });
-            })
+            });
+            this._dataStore.nextStartDate = result.data.nextcallparameters.startdate;
             
             this.notifyObserver();
             
@@ -83,7 +84,7 @@ export class MessagesService {
             // http://stackoverflow.com/questions/35254323/rxjs-observable-pagination
             
             
-            if(result.data.length > 0) {
+            if(result.data.records.length > 0) {
                 this.loadAll();
             } else {
                 // TODO: Stop doing this.

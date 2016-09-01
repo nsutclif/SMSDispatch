@@ -86,13 +86,13 @@ apigClientFactory.newClient = function (config) {
     apigClient.messagesGet = function (params, body, additionalParams) {
         if(additionalParams === undefined) { additionalParams = {}; }
         
-        apiGateway.core.utils.assertParametersDefined(params, ['Limit', 'StartDate', 'Skip'], ['body']);
+        apiGateway.core.utils.assertParametersDefined(params, ['Limit', 'StartDate'], ['body']);
         
         var messagesGetRequest = {
             verb: 'get'.toUpperCase(),
             path: pathComponent + uritemplate('/messages').expand(apiGateway.core.utils.parseParametersToObject(params, [])),
             headers: apiGateway.core.utils.parseParametersToObject(params, []),
-            queryParams: apiGateway.core.utils.parseParametersToObject(params, ['Limit', 'StartDate', 'Skip']),
+            queryParams: apiGateway.core.utils.parseParametersToObject(params, ['Limit', 'StartDate']),
             body: body
         };
         
@@ -104,13 +104,13 @@ apigClientFactory.newClient = function (config) {
     apigClient.messagesOptions = function (params, body, additionalParams) {
         if(additionalParams === undefined) { additionalParams = {}; }
         
-        apiGateway.core.utils.assertParametersDefined(params, [], ['body']);
+        apiGateway.core.utils.assertParametersDefined(params, ['StartDate'], ['body']);
         
         var messagesOptionsRequest = {
             verb: 'options'.toUpperCase(),
             path: pathComponent + uritemplate('/messages').expand(apiGateway.core.utils.parseParametersToObject(params, [])),
             headers: apiGateway.core.utils.parseParametersToObject(params, []),
-            queryParams: apiGateway.core.utils.parseParametersToObject(params, []),
+            queryParams: apiGateway.core.utils.parseParametersToObject(params, ['StartDate']),
             body: body
         };
         
