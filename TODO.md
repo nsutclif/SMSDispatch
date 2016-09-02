@@ -28,6 +28,7 @@ Sometimes when I log in, the contacts fail to synchronize.  Possibly because I w
 
 * Send to a list of groups
 * When adding to a group, present a dropdown of existing groups
+* Calculate and cache thumbnails for the MMS images.
 
 ## Contact Management
 
