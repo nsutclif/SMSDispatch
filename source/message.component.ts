@@ -41,6 +41,11 @@ import {ContactFormComponent} from './contact-form.component';
                                 </ul>
                             </span>
                             {{message.text}}
+                            <div *ngIf="message.imageURLs">
+                                <a *ngFor="let imageURL of message.imageURLs" href="{{imageURL}}" target="_blank">
+                                    <img src="{{imageURL}}" class="thumb">
+                                </a>
+                            </div>
                             <message-send-form [fixedRecipient]="message.from" *ngIf="replying" (done)="replying=false"></message-send-form>
                             <contact-form [fixedPhoneNumber]="message.from" [possibleName]="possibleName" [possibleGroup]="possibleGroup" (done)="addingContact=false" *ngIf="addingContact"></contact-form>
                         </div>
@@ -62,6 +67,9 @@ import {ContactFormComponent} from './contact-form.component';
         }
         .outgoing{
             background-color: #E8F0FF;
+        }
+        .thumb{
+            height: 128px;
         }
     `],
     inputs: ['message']

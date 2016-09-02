@@ -64,8 +64,24 @@ export class MessagesService {
         // TODO: Test some error conditions here.       
         apigClient.messagesGet(params).then((result) => {
             console.log(result);
+
             result.data.records.map(dtoMessage => {
                 // console.log(JSON.stringify(dtoMessage));
+
+                let imageURLs: string[] = null;
+                if (dtoMessage.mediaobject){
+                    imageURLs = dtoMessage.mediaobject.media_list.map(mediaItem => {
+                        // to get the URL of the image, strip the .json off the end of the uri and then prepend api.twilio.com
+                        let matches = /^(.+).json/.exec(mediaItem.uri);
+
+                        if (Array.isArray(matches)) {
+                            return 'http://api.twilio.com' + matches[1];
+                        } else {
+                            throw new Error('Cannott find media item uri');
+                        }
+                    });
+                }
+
                 this._dataStore.messages.unshift({
                     id: dtoMessage.id,
                     text: dtoMessage.body,
@@ -73,7 +89,8 @@ export class MessagesService {
                     to: dtoMessage.to,
                     from: dtoMessage.from,
                     outgoing: dtoMessage.direction === 'outbound-api',
-                    contact: null
+                    contact: null,
+                    imageURLs: imageURLs
                 });
             });
             this._dataStore.nextStartDate = result.data.nextcallparameters.startdate;

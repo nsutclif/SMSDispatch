@@ -4,7 +4,6 @@
 
 # Bugs
 
-* Duplicate messages being displayed; refresh required (server side?)
 * Incoming malformed messages (quote characters?) don't make it
 * Intermittent Twilio callback failure - when the server asks for more info about the message it just got (server side?)
 * Validate phone numbers for new contacts.  Previously, any bad data in browser local storage completely borked us.
@@ -29,7 +28,6 @@ Sometimes when I log in, the contacts fail to synchronize.  Possibly because I w
 
 * Send to a list of groups
 * When adding to a group, present a dropdown of existing groups
-* Display images for MMS
 
 ## Contact Management
 

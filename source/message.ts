@@ -8,4 +8,5 @@ export interface SMSMessage {
     from: string;
     outgoing: boolean;
     contact: Contact;
+    imageURLs: string[];
 }
