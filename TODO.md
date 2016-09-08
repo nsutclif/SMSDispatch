@@ -4,7 +4,6 @@
 
 # Bugs
 
-* Incoming malformed messages (quote characters?) don't make it
 * Intermittent Twilio callback failure - when the server asks for more info about the message it just got (server side?)
 * Validate phone numbers for new contacts.  Previously, any bad data in browser local storage completely borked us.
 * After switching accounts, the contacts don't show up properly (?)
