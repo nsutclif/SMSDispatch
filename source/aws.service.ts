@@ -29,9 +29,20 @@ export class AWSService {
                     // fbUserId = response.authResponse.userID;
                     // button.style.display = 'block';
 
-                    AWS.config.credentials.get(() => {
-                        self.syncClient = new AWS.CognitoSyncManager();
-                        resolve();
+                    // Without the following line, credentials.get() fails after logging out of one Facebook account and into another.
+                    // This is a workaround for an issue with AWS Cognito.
+                    // see http://stackoverflow.com/questions/29524973/how-to-logout-from-amazon-cognito-javascript-and-clear-cached-identityid
+                    // and https://github.com/aws/aws-sdk-js/issues/609
+                    AWS.config.credentials.clearCachedId(); // workaround                     
+                    
+                    AWS.config.credentials.get((err) => {
+                        if (err) {
+                            reject(err);
+                        }
+                        else {
+                            self.syncClient = new AWS.CognitoSyncManager();
+                            resolve();
+                        }
                     });                    
                 }
                 else {

@@ -6,12 +6,7 @@
 
 * Intermittent Twilio callback failure - when the server asks for more info about the message it just got (server side?)
 * Validate phone numbers for new contacts.  Previously, any bad data in browser local storage completely borked us.
-* After switching accounts, the contacts don't show up properly (?)
-* Occasional error logging in (maybe the same as above?)
-  * MissingRequiredParameter: Missing required key 'IdentityId' in params error - looks like a problem logging into Cognito
-  * https://mobile.awsblog.com/post/TxBVEDL5Z8JKAC/Use-Amazon-Cognito-in-your-website-for-simple-AWS-authentication
 * Is the following all fixed?
-
   The first time I add a contact, I get a weird "synchronize failed" error but it seems to synchronize after I add the second contact.
 Sometimes when I log in, the contacts fail to synchronize.  Possibly because I was doing a slow upload?  It doesn't seem to retry.
  -> Try logging in after clearing the cache.
@@ -19,7 +14,7 @@ Sometimes when I log in, the contacts fail to synchronize.  Possibly because I w
 
 # Performance
 
-* Improve deployment.  Use System.js to build for deployment?
+* Improve deployment.  Use System.js to build for deployment?  Actually Angular prefers Webpack now...
 
 # Features
 
