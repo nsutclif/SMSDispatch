@@ -27,7 +27,6 @@ Sometimes when I log in, the contacts fail to synchronize.  Possibly because I w
 ## Contact Management
 
 * Either show the leaders first or have a toggle to *show leaders only.*
-* Improve handling of duplicate phone numbers.
 * That issue with contacts not appearing the first time logging on to the system with a new acct.  Refresh and everything then works fine
 * Import/export contacts (nope)
 

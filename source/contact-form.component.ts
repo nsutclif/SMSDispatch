@@ -10,6 +10,7 @@ import {ContactsService} from './contacts.service';
         <div class="form-group" *ngIf="!fixedPhoneNumber">
             <label for="phone">Phone</label>
             <input type="text" class="form-control" ngControl="phone" placeholder="Phone">
+            <div>{{phoneError}}</div>
         </div>
         <div class="form-group">
             <label for="name">Name</label>
@@ -46,11 +47,15 @@ export class ContactFormComponent implements OnInit {
     
     @Input()
     public existingContact: Contact;
+
+    private phoneError: string;
     
     constructor(private _contactsService: ContactsService, private _formBuilder: FormBuilder) {        
     }
     
     onSubmit() {
+        let success: boolean = true;
+
         if (this.existingContact) {
             this.existingContact.name = this.form.value.name;
             this.existingContact.group = this.form.value.group;
@@ -71,10 +76,20 @@ export class ContactFormComponent implements OnInit {
                 group: this.form.value.group,
                 leader: this.form.value.leader
             }
-            
-            this._contactsService.addContact(newContact);
+
+            let matchingContact: Contact = this._contactsService.getContactByPhoneApprox(phone);
+            if (matchingContact) {
+                this.phoneError = 'Phone number ' + phone + ' already in use by ' + matchingContact.name;
+                success = false;
+            }
+            else {
+               this._contactsService.addContact(newContact);
+            }
         }
-        this.doneAdding(1000);
+
+        if (success) {
+            this.doneAdding(1000);
+        }
     }
     
     private resetModel() {
@@ -100,6 +115,8 @@ export class ContactFormComponent implements OnInit {
             group: [initialGroup, Validators.required],
             leader: [initialLeader, Validators.nullValidator]
         });
+
+        this.phoneError = '';
     }
     
     private doneAdding(doneEventDelay: number) {
