@@ -50,6 +50,8 @@ Authenticating into Twilio
 
 * replace JSON.parse(JSON.stringify) with Assign.
 * My use of promises is a mess
+* Update to latest Angular 2
+https://docs.google.com/document/u/0/d/1RIezQqE4aEhBRmArIAS1mRIZtWFf6JxN_7B4meyWK0Y/pub
 
 # Links
 
