@@ -72,7 +72,8 @@ export class MessageSendFormComponent implements OnInit {
             to: '',
             from: '',
             outgoing: true,
-            contact: null
+            contact: null,
+            imageURLs: null
         };
         
         let messageObservable: Observable<any>;
