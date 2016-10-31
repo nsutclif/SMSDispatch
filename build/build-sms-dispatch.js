@@ -49,12 +49,48 @@ function s3GetObject(bucket, key, localPath) {
     });
 }
 
+// This version didn't work...
+// function s3PutObject(localPath, bucket, key) {
+//     try {
+//         const s3 = new AWS.S3({signatureVersion: "v4", maxRetries: 6});
+//         const localFileStream = fs.createReadStream(localPath);
+        
+//         const putObjectParams = {Body: localFileStream, Bucket: bucket, Key: key};
+//         console.log('Putting object: ' + key);
+//         return s3.putObject(putObjectParams).promise().then((data) => {
+//             console.log('success: ' + JSON.stringify(data));
+//             return Promise.resolve();
+//         });
+//     } catch(error) {
+//         return Promise.reject(error);
+//     }
+// }
+
+function readFilePromise(localPath) {
+    return new Promise((resolve, reject) => {
+        fs.readFile(localPath, (err, data) => {
+            if (err) {
+                reject(err);
+            }
+            else {
+                resolve(data);
+            }
+        })
+    });
+}
+
 function s3PutObject(localPath, bucket, key) {
-    console.log('putting: ' + localPath);
-    const s3 = new AWS.S3({signatureVersion: "v4"});
-    
-    const localFileStream = fs.createReadStream(localPath);
-    return s3.putObject({Body: localFileStream, Bucket: bucket, Key: key}).promise();
+    console.log('putting Object: ' + localPath);
+    return readFilePromise(localPath).then((data) => {
+        const s3 = new AWS.S3({signatureVersion: "v4", maxRetries: 6});
+
+        const putObjectParams = {Body: data, Bucket: bucket, Key: key};
+        console.log('Putting object: ' + key);
+        return s3.putObject(putObjectParams).promise().then((result) => {
+            console.log('success: ' + JSON.stringify(result));
+            return Promise.resolve();
+        });
+    });
 }
 
 function readDirPromise(path) {
@@ -165,18 +201,34 @@ function s3PutDirectory(localPath, bucket, keyPrefix) {
     } catch (error) {
         return Promise.reject(error);
     }
-
-    return filesToSend.reduce((promise, file) => {
-        return promise.then(() => {
-            s3PutObject(file, bucket, keyPrefix + file);
-            // return new Promise((resolve, reject)=> {
-            //     setTimeout(() => {
-            //         console.log('sent file ' + file);
-            //         resolve();
-            //     }, 500);
-            // });
-        });
-    }, Promise.resolve());
+    // send files one at a time:
+    // return filesToSend.reduce((promise, file) => {
+    //     return promise.then(() => {
+    //         return s3PutObject(file, bucket, keyPrefix + file);
+    //     });
+    // }, Promise.resolve());
+    
+    let totalFilesToSend = filesToSend.length;
+    
+    function sendFileChain() {
+        const fileToSend = filesToSend.pop();
+        if (fileToSend) {
+            return s3PutObject(fileToSend, bucket, keyPrefix + fileToSend).then(() => {
+                console.log(Math.round((totalFilesToSend - filesToSend.length)/totalFilesToSend*100) + '%');
+                return sendFileChain();
+            });
+        }
+        else {
+            console.log('filesToSend is empty.');
+            return Promise.resolve();
+        }
+    }
+    
+    let sendFileChains = [];
+    for (var i = 0; i < 6; i++) {
+       sendFileChains.push(sendFileChain());
+    }    
+    return Promise.all(sendFileChains);
 }
 
 exports.handler = (event, context, callback) => {
@@ -244,13 +296,13 @@ exports.handler = (event, context, callback) => {
             // return runProcessPromise('ls /tmp/');
         })
         .then(() => {
-            // return s3GetObject(inputArtifactBucket, inputArtifactKey, '/tmp/' + inputArtifactFileName);
+            return s3GetObject(inputArtifactBucket, inputArtifactKey, '/tmp/' + inputArtifactFileName);
         })
         .then(() => {
             // return runProcessPromise('ls /tmp/');
         })
         .then(() => {
-            // return runProcessPromise('unzip /tmp/' + inputArtifactFileName + ' -d ' + projectTempDir);
+            return runProcessPromise('unzip -n /tmp/' + inputArtifactFileName + ' -d ' + projectTempDir);
         })
         .then(() => {
             // return runProcessPromise('ls -R /tmp/');
@@ -260,23 +312,28 @@ exports.handler = (event, context, callback) => {
             
             // Errors like this mean you ran out of memory:
             // /bin/sh: line 1:    25 Killed                  npm install
-            // return runProcessPromise('cd ' + projectTempDir + " && export HOME='/tmp' && npm install");
+            return runProcessPromise('cd ' + projectTempDir + " && export HOME='/tmp' && npm install");
         })
         .then(() => {
-            // return runProcessPromise('cd ' + projectTempDir + " && export HOME='/tmp' && npm run tsc");
+            return runProcessPromise('cd ' + projectTempDir + " && export HOME='/tmp' && npm run tsc");
         })
         .then(() => {
-            // s3PutDirectory(projectTempDir, 'sms-dispatch-built', inputArtifactHash + '/');
-            return s3PutDirectory('/Users/nsutcliffe/Documents/Source/SMSDispatch/apiGateway-js-sdk', 'sms-dispatch-built', inputArtifactHash + '/');
+            console.log('pause...');
+            return new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    resolve();
+                }, 10000);
+            });
+        })
+        .then(() => {
+            return s3PutDirectory(projectTempDir, 'sms-dispatch-built', inputArtifactHash);
         })
         .then(() => {
             console.log('returning success...');
             putJobSuccess('Success');
         })
         .catch((error) => {
-            console.log('returning error...' + error);
+            console.log('returning error...');
             putJobFailure(error);
         });
-    
-    // aws s3 cp test.txt s3://mybucket/test2.txt
 };
