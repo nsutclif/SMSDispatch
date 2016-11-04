@@ -141,7 +141,7 @@ export class MessagesService {
         }
         console.log(JSON.stringify(params));
         // TODO: Test some error conditions here.       
-        return Observable.fromPromise(apigClient.messagesOutgoingPost(params));
+        return Observable.fromPromise(apigClient.messagesOutgoingPost({}, dto));
     }
 
 
@@ -177,6 +177,8 @@ export class MessagesService {
                 }
             });
             
+            console.log('before sendMessageDTO: ' + JSON.stringify(body));
+
             return this.sendMessageDTO(body);
         } 
         catch (error) {
